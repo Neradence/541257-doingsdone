@@ -1,6 +1,55 @@
 <?php
 // показывать или нет выполненные задачи
 $show_complete_tasks = rand(0, 1);
+
+//одномерный массив с перечнем категорий
+$categories = ["Все", "Входящие", "Учёба", "Работа", "Домашние дела", "Авто"];
+
+//двумерный массив с задачами
+$do_list = [
+    [
+        "name" => "Собеседование в IT компании",
+        "date" => "01.06.2018",
+        "category" => "Работа",
+        "done" => false,
+    ],
+
+    [
+        "name" => "Выполнить тестовое задание",
+        "date" => "25.05.2018",
+        "category" => "Работа",
+        "done" => false,
+    ],
+
+    [
+        "name" => "Сделать задание первого раздела",
+        "date" => "21.04.2018",
+        "category" => "Учеба",
+        "done" => true,
+    ],
+
+    [
+        "name" => "Встреча с другом",
+        "date" => "22.04.2018",
+        "category" => "Входящие",
+        "done" => false,
+    ],
+
+    [
+        "name" => "Купить корм для кота",
+        "date" => "Нет",
+        "category" => "Домашние дела",
+        "done" => false,
+    ],
+
+    [
+        "name" => "Заказать пиццу",
+        "date" => "Нет",
+        "category" => "Домашние дела",
+        "done" => false,
+    ]
+
+];
 ?>
 <!DOCTYPE html>
 <html lang="ru">
@@ -40,39 +89,23 @@ $show_complete_tasks = rand(0, 1);
                 </div>
             </div>
         </header>
+		
 
         <div class="content">
             <section class="content__side">
                 <h2 class="content__side-heading">Проекты</h2>
 
                 <nav class="main-navigation">
-                    <ul class="main-navigation__list">
-                        <li class="main-navigation__list-item">
-                            <a class="main-navigation__list-item-link" href="#">Входящие</a>
-                            <span class="main-navigation__list-item-count">24</span>
-                        </li>
-
-                        <li class="main-navigation__list-item main-navigation__list-item--active">
-                            <a class="main-navigation__list-item-link" href="#">Работа</a>
-                            <span class="main-navigation__list-item-count">12</span>
-                        </li>
-
-                        <li class="main-navigation__list-item">
-                            <a class="main-navigation__list-item-link" href="#">Здоровье</a>
-                            <span class="main-navigation__list-item-count">3</span>
-                        </li>
-
-                        <li class="main-navigation__list-item">
-                            <a class="main-navigation__list-item-link" href="#">Домашние дела</a>
-                            <span class="main-navigation__list-item-count">7</span>
-                        </li>
-
-                        <li class="main-navigation__list-item">
-                            <a class="main-navigation__list-item-link" href="#">Авто</a>
-                            <span class="main-navigation__list-item-count">0</span>
-                        </li>
-                    </ul>
+						<ul class="main-navigation__list">
+							<?php for ($i = 0; $i < count($categories); $i++) { ?>
+							<li class="main-navigation__list-item<?php echo (0 === $i) ? " main-navigation__list-item--active" : ""; ?>">
+								<a class="main-navigation__list-item-link" href="#"><?=$categories[$i];?></a>
+								<span class="main-navigation__list-item-count"><?= rand(0, 30);?></span>
+							</li>
+							<?php } ?>
+						</ul>
                 </nav>
+
 
                 <a class="button button--transparent button--plus content__side-button open-modal"
                    href="javascript:;" target="project_add">Добавить проект</a>
@@ -97,41 +130,24 @@ $show_complete_tasks = rand(0, 1);
 
                     <label class="checkbox">
                         <!--добавить сюда аттрибут "checked", если переменная $show_complete_tasks равна единице-->
-						<input class="checkbox__input visually-hidden show_completed" type="checkbox" <?php echo (1 === $show_complete_tasks) ? "checked" : ""; ?> >
+						<input class="checkbox__input visually-hidden show_completed" type="checkbox" <?= (1 === $show_complete_tasks) ? "checked" : ""; ?> >
                         <span class="checkbox__text">Показывать выполненные</span>
                     </label>
                 </div>
-
-                <table class="tasks">
-                    <tr class="tasks__item task">
-                        <td class="task__select">
-                            <label class="checkbox task__checkbox">
-                                <input class="checkbox__input visually-hidden task__checkbox" type="checkbox" value="1">
-                                <span class="checkbox__text">Сделать главную страницу Дела в порядке</span>
-                            </label>
-                        </td>
-
-                        <td class="task__file">
-                            <a class="download-link" href="#">Home.psd</a>
-                        </td>
-
-                        <td class="task__date"></td>
-                    </tr>
-                    <!--показывать следующий тег <tr/>, если переменная $show_complete_tasks равна единице-->
-					<?php if (1 === $show_complete_tasks): ?>
-                    <tr class="tasks__item task task--completed">
-						<td class="task__select">
-							<label class="checkbox task__checkbox">
-								<input class="checkbox__input visually-hidden" type="checkbox" checked>
-								<span class="checkbox__text">Записаться на интенсив "Базовый PHP"</span>
-							</label>
-						</td>
-						<td class="task__date">10.04.2017</td>
-
-						<td class="task__controls">
-						</td>
+				
+				<table class="tasks">
+                    <?php foreach ($do_list as $key) { ?>
+						<tr class="tasks__item task<?= $key['done'] ? " task--completed" : ""; ?>">
+							<td class="task__select">
+								<label class="checkbox task__checkbox">
+									<input class="checkbox__input visually-hidden" type="checkbox" <?= (true === $key['done']) ? "checked" : ""; ?>>
+									<span class="checkbox__text"><?= $key['name'];?></span>
+								</label>
+							</td>
+							<td class="task__date"><?= $key['date'];?></td>
+							<td class="task__controls"></td>
+					<?php } ?>
 					</tr>
-					<?php endif; ?>
                 </table>
             </main>
         </div>
