@@ -95,14 +95,10 @@ $do_list = [
             <section class="content__side">
                 <h2 class="content__side-heading">Проекты</h2>
 
-				<?php
-				$all = count($categories) - 1;
-				?>
-				
                 <nav class="main-navigation">
 						<ul class="main-navigation__list">
-							<?php for ($i = 0; $i <= $all; $i++) { ?>
-							<li class="main-navigation__list-item<?php echo (0 === $i) ? "--active" : ""; ?>">
+							<?php for ($i = 0; $i < count($categories); $i++) { ?>
+							<li class="main-navigation__list-item<?php echo (0 === $i) ? " main-navigation__list-item--active" : ""; ?>">
 								<a class="main-navigation__list-item-link" href="#"><?=$categories[$i];?></a>
 								<span class="main-navigation__list-item-count"><?= rand(0, 30);?></span>
 							</li>
@@ -141,14 +137,14 @@ $do_list = [
 				
 				<table class="tasks">
                     <?php foreach ($do_list as $key) { ?>
-						<tr class="tasks__item task <?= $key['done'] ? "task--completed" : ""; ?>">
+						<tr class="tasks__item task<?= $key['done'] ? " task--completed" : ""; ?>">
 							<td class="task__select">
 								<label class="checkbox task__checkbox">
 									<input class="checkbox__input visually-hidden" type="checkbox" <?= (true === $key['done']) ? "checked" : ""; ?>>
-									<span class="checkbox__text"><?=$key['name'];?></span>
+									<span class="checkbox__text"><?= $key['name'];?></span>
 								</label>
 							</td>
-							<td class="task__date"><?=$key['date'];?></td>
+							<td class="task__date"><?= $key['date'];?></td>
 							<td class="task__controls"></td>
 					<?php } ?>
 					</tr>
