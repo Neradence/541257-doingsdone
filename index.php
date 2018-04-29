@@ -8,45 +8,45 @@ $categories = ["Все", "Входящие", "Учёба", "Работа", "До
 //двумерный массив с задачами
 $do_list = [
     [
-        name => "Собеседование в IT компании",
-        date => "01.06.2018",
-        category => "Работа",
-        done => 'false',
+        "name" => "Собеседование в IT компании",
+        "date" => "01.06.2018",
+        "category" => "Работа",
+        done => false,
     ],
 
     [
-        name => "Выполнить тестовое задание",
-        date => "25.05.2018",
-        category => "Работа",
-        done => 'false',
+        "name" => "Выполнить тестовое задание",
+        "date" => "25.05.2018",
+        "category" => "Работа",
+        done => false,
     ],
 
     [
-        name => "Сделать задание первого раздела",
-        date => "21.04.2018",
-        category => "Учеба",
-        done => 'true',
+        "name" => "Сделать задание первого раздела",
+        "date" => "21.04.2018",
+        "category" => "Учеба",
+        done => true,
     ],
 
     [
-        name => "Встреча с другом",
-        date => "22.04.2018",
-        category => "Входящие",
-        done => 'false',
+        "name" => "Встреча с другом",
+        "date" => "22.04.2018",
+        "category" => "Входящие",
+        done => false,
     ],
 
     [
-        name => "Купить корм для кота",
-        date => "Нет",
-        category => "Домашние дела",
-        done => 'false',
+        "name" => "Купить корм для кота",
+        "date" => "Нет",
+        "category" => "Домашние дела",
+        done => false,
     ],
 
     [
-        name => "Заказать пиццу",
-        date => "Нет",
-        category => "Домашние дела",
-        done => 'false',
+        "name" => "Заказать пиццу",
+        "date" => "Нет",
+        "category" => "Домашние дела",
+        done => false,
     ]
 
 ];
@@ -95,14 +95,18 @@ $do_list = [
             <section class="content__side">
                 <h2 class="content__side-heading">Проекты</h2>
 
+				<?php
+				$all = count($categories) - 1;
+				?>
+				
                 <nav class="main-navigation">
 						<ul class="main-navigation__list">
-							<?php for ($i = 0; $i <= 5; $i++) { ?>
+							<?php for ($i = 0; $i <= $all; $i++) { ?>
 							<li class="main-navigation__list-item<?php echo (0 === $i) ? "--active" : ""; ?>">
 								<a class="main-navigation__list-item-link" href="#"><?=$categories[$i];?></a>
 								<span class="main-navigation__list-item-count"><?= rand(0, 30);?></span>
 							</li>
-							<?php ; } ?>
+							<?php } ?>
 						</ul>
                 </nav>
 
@@ -135,28 +139,19 @@ $do_list = [
                     </label>
                 </div>
 				
-				<?php
-					$i = 0;
-				?>
 				<table class="tasks">
                     <?php foreach ($do_list as $key) { ?>
-						<tr class="tasks__item task task<?= ('true' === $do_list[$i]['done']) ? "--completed" : ""; ?>">
+						<tr class="tasks__item task <?= $key['done'] ? "task--completed" : ""; ?>">
 							<td class="task__select">
 								<label class="checkbox task__checkbox">
-									<input class="checkbox__input visually-hidden" type="checkbox" <?= ('true' === $do_list[$i]['done']) ? "checked" : ""; ?>>
-									<span class="checkbox__text"><?=$do_list[$i]['name'];?></span>
+									<input class="checkbox__input visually-hidden" type="checkbox" <?= (true === $key['done']) ? "checked" : ""; ?>>
+									<span class="checkbox__text"><?=$key['name'];?></span>
 								</label>
 							</td>
-							<td class="task__date"><?=$do_list[$i]['date'];?></td>
-							<td class="task__controls">
-								<?php if ('false' === $do_list[$i]['done'])
-								{ echo "Нет"; }
-								else
-								{ echo "Да"; }
-								?>
-							</td>
+							<td class="task__date"><?=$key['date'];?></td>
+							<td class="task__controls"></td>
+					<?php } ?>
 					</tr>
-                   <?php $i++; } ?>
                 </table>
             </main>
         </div>
