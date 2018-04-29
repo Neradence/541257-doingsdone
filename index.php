@@ -11,42 +11,42 @@ $do_list = [
         "name" => "Собеседование в IT компании",
         "date" => "01.06.2018",
         "category" => "Работа",
-        done => false,
+        "done" => false,
     ],
 
     [
         "name" => "Выполнить тестовое задание",
         "date" => "25.05.2018",
         "category" => "Работа",
-        done => false,
+        "done" => false,
     ],
 
     [
         "name" => "Сделать задание первого раздела",
         "date" => "21.04.2018",
         "category" => "Учеба",
-        done => true,
+        "done" => true,
     ],
 
     [
         "name" => "Встреча с другом",
         "date" => "22.04.2018",
         "category" => "Входящие",
-        done => false,
+        "done" => false,
     ],
 
     [
         "name" => "Купить корм для кота",
         "date" => "Нет",
         "category" => "Домашние дела",
-        done => false,
+        "done" => false,
     ],
 
     [
         "name" => "Заказать пиццу",
         "date" => "Нет",
         "category" => "Домашние дела",
-        done => false,
+        "done" => false,
     ]
 
 ];
