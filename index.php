@@ -50,27 +50,29 @@ $do_list = [
     ]
 
 ];
-
-function project_count($arr, $name)
+/**
+ * @param array $arr
+ * @param string $name
+ * @return int
+ * Считает количество проектов из одной категории
+ */
+function projects_count(array $projects, string $name): int
 {
-    $pcount = 0;
-    $i = 0;
+    if ('Все' === $name) {
+        return count($projects);
+    }
+    
+    $count = 0;
 
-    foreach ($arr as $key)
+    foreach ($projects as $key)
     {
-        if ($name === $key['category'])
-        {
-            $pcount++;
+        if ($name === $key['category']) {
+            $count++;
         }
-        $i++;
     }
 
-    if ('Все' === $name)
-        return $i;
-    else
-        return $pcount;
+    return $count;
 
-    unset ($i, $pcount);
 }
 ?>
 
@@ -125,7 +127,7 @@ function project_count($arr, $name)
                                     <?php if (isset($categories[$i])): ?>
                                         <li class="main-navigation__list-item<?php echo (0 === $i) ? " main-navigation__list-item--active" : ""; ?>">
                                             <a class="main-navigation__list-item-link" href="#"><?=$categories[$i];?></a>
-                                            <span class="main-navigation__list-item-count"><?= project_count($do_list, $categories[$i]);?></span>
+                                            <span class="main-navigation__list-item-count"><?= projects_count($do_list, $categories[$i]);?></span>
                                         </li>
                                     <?php endif; ?>
                                 <?php } ?>
