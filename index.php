@@ -50,14 +50,15 @@ $do_list = [
     ]
 
 ];
+
 /**
  * Считает количество проектов из одной категории
+ *
  * @param array $projects
  * @param string $name
  *
  * @return int
  */
-
 function projects_count(array $projects, string $name): int
 {
     if ('Все' === $name) {
