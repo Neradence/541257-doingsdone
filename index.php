@@ -24,7 +24,7 @@ $do_list = [
     [
         "name" => "Сделать задание первого раздела",
         "date" => "21.04.2018",
-        "category" => "Учеба",
+        "category" => "Учёба",
         "done" => true,
     ],
 
@@ -50,7 +50,34 @@ $do_list = [
     ]
 
 ];
+
+/**
+ * Считает количество проектов из одной категории
+ *
+ * @param array $projects
+ * @param string $name
+ *
+ * @return int
+ */
+function projects_count(array $projects, string $name): int
+{
+    if ('Все' === $name) {
+        return count($projects);
+    }
+
+    $count = 0;
+
+    foreach ($projects as $key) {
+        if (isset($key['category']) && ($name === $key['category'])) {
+            $count++;
+        }
+    }
+
+    return $count;
+
+}
 ?>
+
 <!DOCTYPE html>
 <html lang="ru">
 
@@ -96,14 +123,18 @@ $do_list = [
                 <h2 class="content__side-heading">Проекты</h2>
 
                 <nav class="main-navigation">
-						<ul class="main-navigation__list">
-							<?php for ($i = 0; $i < count($categories); $i++) { ?>
-							<li class="main-navigation__list-item<?php echo (0 === $i) ? " main-navigation__list-item--active" : ""; ?>">
-								<a class="main-navigation__list-item-link" href="#"><?=$categories[$i];?></a>
-								<span class="main-navigation__list-item-count"><?= rand(0, 30);?></span>
-							</li>
-							<?php } ?>
-						</ul>
+                    <ul class="main-navigation__list">
+                        <?php if (isset($categories) && is_array($categories)) : ?>
+                            <?php for ($i = 0; $i < count($categories); $i++) { ?>
+                                <?php if (isset($categories[$i])): ?>
+                                    <li class="main-navigation__list-item<?php echo (0 === $i) ? " main-navigation__list-item--active" : ""; ?>">
+                                        <a class="main-navigation__list-item-link" href="#"><?=$categories[$i];?></a>
+                                        <span class="main-navigation__list-item-count"><?= projects_count($do_list, $categories[$i]);?></span>
+                                    </li>
+                                <?php endif; ?>
+                            <?php } ?>
+                        <?php endif; ?>
+                    </ul>
                 </nav>
 
 
@@ -136,18 +167,24 @@ $do_list = [
                 </div>
 				
 				<table class="tasks">
-                    <?php foreach ($do_list as $key) { ?>
-						<tr class="tasks__item task<?= $key['done'] ? " task--completed" : ""; ?>">
-							<td class="task__select">
-								<label class="checkbox task__checkbox">
-									<input class="checkbox__input visually-hidden" type="checkbox" <?= (true === $key['done']) ? "checked" : ""; ?>>
-									<span class="checkbox__text"><?= $key['name'];?></span>
-								</label>
-							</td>
-							<td class="task__date"><?= $key['date'];?></td>
-							<td class="task__controls"></td>
-					<?php } ?>
-					</tr>
+                    <?php if (isset($do_list) && is_array($do_list)) : ?>
+                        <?php foreach ($do_list as $key) { ?>
+                            <tr class="tasks__item task<?= isset($key['done']) && $key['done'] ? " task--completed" : ""; ?>">
+                                <td class="task__select">
+                                    <label class="checkbox task__checkbox">
+                                        <?php if (isset($key['name'], $key['done'])): ?>
+                                            <input class="checkbox__input visually-hidden" type="checkbox"<?= (true === $key['done']) ? " checked" : ""; ?>>
+                                            <span class="checkbox__text"><?= isset($key['name']) ? $key['name']: "";?></span>
+                                        <?php endif; ?>
+                                    </label>
+                                </td>
+                                <?php if (isset($key['date'])): ?>
+                                    <td class="task__date"><?= isset($key['date']) ? $key['date']: "";?></td>
+                                <?php endif; ?>
+                                <td class="task__controls"></td>
+                            </tr>
+                        <?php } ?>
+                    <?php endif; ?>
                 </table>
             </main>
         </div>
