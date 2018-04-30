@@ -61,13 +61,15 @@ function projects_count(array $projects, string $name): int
     if ('Все' === $name) {
         return count($projects);
     }
-    
+
     $count = 0;
 
     foreach ($projects as $key)
     {
-        if ($name === $key['category']) {
-            $count++;
+        if (isset($key['category'])) {
+            if ($name === $key['category']) {
+                $count++;
+            }
         }
     }
 
