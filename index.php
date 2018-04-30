@@ -24,7 +24,7 @@ $do_list = [
     [
         "name" => "Сделать задание первого раздела",
         "date" => "21.04.2018",
-        "category" => "Учеба",
+        "category" => "Учёба",
         "done" => true,
     ],
 
@@ -50,7 +50,30 @@ $do_list = [
     ]
 
 ];
+
+function project_count($arr, $name)
+{
+    $pcount = 0;
+    $i = 0;
+
+    foreach ($arr as $key)
+    {
+        if ($name === $key['category'])
+        {
+            $pcount++;
+        }
+        $i++;
+    }
+
+    if ('Все' === $name)
+        return $i;
+    else
+        return $pcount;
+
+    unset ($i, $pcount);
+}
 ?>
+
 <!DOCTYPE html>
 <html lang="ru">
 
@@ -97,12 +120,16 @@ $do_list = [
 
                 <nav class="main-navigation">
 						<ul class="main-navigation__list">
-							<?php for ($i = 0; $i < count($categories); $i++) { ?>
-							<li class="main-navigation__list-item<?php echo (0 === $i) ? " main-navigation__list-item--active" : ""; ?>">
-								<a class="main-navigation__list-item-link" href="#"><?=$categories[$i];?></a>
-								<span class="main-navigation__list-item-count"><?= rand(0, 30);?></span>
-							</li>
-							<?php } ?>
+                            <?php if (isset($categories) && is_array($categories)) : ?>
+                                <?php for ($i = 0; $i < count($categories); $i++) { ?>
+                                    <?php if (isset($categories[$i])): ?>
+                                        <li class="main-navigation__list-item<?php echo (0 === $i) ? " main-navigation__list-item--active" : ""; ?>">
+                                            <a class="main-navigation__list-item-link" href="#"><?=$categories[$i];?></a>
+                                            <span class="main-navigation__list-item-count"><?= project_count($do_list, $categories[$i]);?></span>
+                                        </li>
+                                    <?php endif; ?>
+                                <?php } ?>
+                            <?php endif; ?>
 						</ul>
                 </nav>
 
@@ -136,18 +163,24 @@ $do_list = [
                 </div>
 				
 				<table class="tasks">
-                    <?php foreach ($do_list as $key) { ?>
-						<tr class="tasks__item task<?= $key['done'] ? " task--completed" : ""; ?>">
-							<td class="task__select">
-								<label class="checkbox task__checkbox">
-									<input class="checkbox__input visually-hidden" type="checkbox" <?= (true === $key['done']) ? "checked" : ""; ?>>
-									<span class="checkbox__text"><?= $key['name'];?></span>
-								</label>
-							</td>
-							<td class="task__date"><?= $key['date'];?></td>
-							<td class="task__controls"></td>
-					<?php } ?>
-					</tr>
+                    <?php if (isset($do_list) && is_array($do_list)) : ?>
+                        <?php foreach ($do_list as $key) { ?>
+                            <tr class="tasks__item task<?= isset($key['done']) && $key['done'] ? " task--completed" : ""; ?>">
+                                <td class="task__select">
+                                    <label class="checkbox task__checkbox">
+                                        <?php if (isset($key['name'], $key['done'])): ?>
+                                            <input class="checkbox__input visually-hidden" type="checkbox"<?= (true === $key['done']) ? " checked" : ""; ?>>
+                                            <span class="checkbox__text"><?= isset($key['name']) ? $key['name']: "";?></span>
+                                        <?php endif; ?>
+                                    </label>
+                                </td>
+                                <?php if (isset($key['date'])): ?>
+                                    <td class="task__date"><?= isset($key['date']) ? $key['date']: "";?></td>
+                                <?php endif; ?>
+                                <td class="task__controls"></td>
+                            </tr>
+                        <?php } ?>
+                    <?php endif; ?>
                 </table>
             </main>
         </div>
