@@ -51,11 +51,13 @@ $do_list = [
 
 ];
 /**
- * @param array $arr
- * @param string $name
- * @return int
  * Считает количество проектов из одной категории
+ * @param array $projects
+ * @param string $name
+ *
+ * @return int
  */
+
 function projects_count(array $projects, string $name): int
 {
     if ('Все' === $name) {
@@ -64,8 +66,7 @@ function projects_count(array $projects, string $name): int
 
     $count = 0;
 
-    foreach ($projects as $key)
-    {
+    foreach ($projects as $key) {
         if (isset($key['category']) && ($name === $key['category'])) {
             $count++;
         }
@@ -121,18 +122,18 @@ function projects_count(array $projects, string $name): int
                 <h2 class="content__side-heading">Проекты</h2>
 
                 <nav class="main-navigation">
-						<ul class="main-navigation__list">
-                            <?php if (isset($categories) && is_array($categories)) : ?>
-                                <?php for ($i = 0; $i < count($categories); $i++) { ?>
-                                    <?php if (isset($categories[$i])): ?>
-                                        <li class="main-navigation__list-item<?php echo (0 === $i) ? " main-navigation__list-item--active" : ""; ?>">
-                                            <a class="main-navigation__list-item-link" href="#"><?=$categories[$i];?></a>
-                                            <span class="main-navigation__list-item-count"><?= projects_count($do_list, $categories[$i]);?></span>
-                                        </li>
-                                    <?php endif; ?>
-                                <?php } ?>
-                            <?php endif; ?>
-						</ul>
+                    <ul class="main-navigation__list">
+                        <?php if (isset($categories) && is_array($categories)) : ?>
+                            <?php for ($i = 0; $i < count($categories); $i++) { ?>
+                                <?php if (isset($categories[$i])): ?>
+                                    <li class="main-navigation__list-item<?php echo (0 === $i) ? " main-navigation__list-item--active" : ""; ?>">
+                                        <a class="main-navigation__list-item-link" href="#"><?=$categories[$i];?></a>
+                                        <span class="main-navigation__list-item-count"><?= projects_count($do_list, $categories[$i]);?></span>
+                                    </li>
+                                <?php endif; ?>
+                            <?php } ?>
+                        <?php endif; ?>
+                    </ul>
                 </nav>
 
 
