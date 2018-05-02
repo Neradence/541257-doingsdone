@@ -48,7 +48,7 @@
                             <?php for ($i = 0; $i < count($categories); $i++) { ?>
                                 <?php if (isset($categories[$i])): ?>
                                     <li class="main-navigation__list-item<?php echo (0 === $i) ? " main-navigation__list-item--active" : ""; ?>">
-                                        <a class="main-navigation__list-item-link" href="#"><?= $categories[$i]; ?></a>
+                                        <a class="main-navigation__list-item-link" href="#"><?= htmlspecialchars($categories[$i]); ?></a>
                                         <span class="main-navigation__list-item-count"><?= projects_count($do_list, $categories[$i]); ?></span>
                                     </li>
                                 <?php endif; ?>
