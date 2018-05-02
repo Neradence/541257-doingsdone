@@ -29,12 +29,12 @@
                     <label class="checkbox task__checkbox">
                         <?php if (isset($key['name'], $key['done'])): ?>
                             <input class="checkbox__input visually-hidden" type="checkbox"<?= (true === $key['done']) ? " checked" : ""; ?>>
-                            <span class="checkbox__text"><?= isset($key['name']) ? $key['name']: "";?></span>
+                            <span class="checkbox__text"><?= isset($key['name']) ? htmlspecialchars($key['name']): ""; ?></span>
                         <?php endif; ?>
                     </label>
                 </td>
                 <?php if (isset($key['date'])): ?>
-                    <td class="task__date"><?= isset($key['date']) ? $key['date']: "";?></td>
+                    <td class="task__date"><?= isset($key['date']) ? htmlspecialchars($key['date']): ""; ?></td>
                 <?php endif; ?>
                 <td class="task__controls"></td>
             </tr>

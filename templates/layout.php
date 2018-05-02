@@ -1,90 +1,9 @@
-<?php
-// показывать или нет выполненные задачи
-$show_complete_tasks = rand(0, 1);
-
-//одномерный массив с перечнем категорий
-$categories = ["Все", "Входящие", "Учёба", "Работа", "Домашние дела", "Авто"];
-
-//двумерный массив с задачами
-$do_list = [
-    [
-        "name" => "Собеседование в IT компании",
-        "date" => "01.06.2018",
-        "category" => "Работа",
-        "done" => false,
-    ],
-
-    [
-        "name" => "Выполнить тестовое задание",
-        "date" => "25.05.2018",
-        "category" => "Работа",
-        "done" => false,
-    ],
-
-    [
-        "name" => "Сделать задание первого раздела",
-        "date" => "21.04.2018",
-        "category" => "Учёба",
-        "done" => true,
-    ],
-
-    [
-        "name" => "Встреча с другом",
-        "date" => "22.04.2018",
-        "category" => "Входящие",
-        "done" => false,
-    ],
-
-    [
-        "name" => "Купить корм для кота",
-        "date" => "Нет",
-        "category" => "Домашние дела",
-        "done" => false,
-    ],
-
-    [
-        "name" => "Заказать пиццу",
-        "date" => "Нет",
-        "category" => "Домашние дела",
-        "done" => false,
-    ]
-
-];
-
-/**
- * Считает количество проектов из одной категории
- *
- * @param array $projects
- * @param string $name
- *
- * @return int
- */
-function projects_count(array $projects, string $name): int
-{
-    if ('Все' === $name) {
-        return count($projects);
-    }
-
-    $count = 0;
-
-    foreach ($projects as $key) {
-        if (isset($key['category']) && ($name === $key['category'])) {
-            $count++;
-        }
-    }
-
-    return $count;
-
-}
-
-?>
-
 <!DOCTYPE html>
 <html lang="ru">
 
 <head>
     <meta charset="UTF-8">
-    <title><?= $title ?></title>
+    <title><?= $title; ?></title>
     <link rel="stylesheet" href="css/normalize.css">
     <link rel="stylesheet" href="css/style.css">
     <link rel="stylesheet" href="css/flatpickr.min.css">
@@ -110,7 +29,7 @@ function projects_count(array $projects, string $name): int
                     </div>
 
                     <div class="user-menu__data">
-                        <p>Константин</p>
+                        <p><?= $user_name; ?></p>
 
                         <a href="#">Выйти</a>
                     </div>
@@ -129,8 +48,8 @@ function projects_count(array $projects, string $name): int
                             <?php for ($i = 0; $i < count($categories); $i++) { ?>
                                 <?php if (isset($categories[$i])): ?>
                                     <li class="main-navigation__list-item<?php echo (0 === $i) ? " main-navigation__list-item--active" : ""; ?>">
-                                        <a class="main-navigation__list-item-link" href="#"><?=$categories[$i];?></a>
-                                        <span class="main-navigation__list-item-count"><?= projects_count($do_list, $categories[$i]);?></span>
+                                        <a class="main-navigation__list-item-link" href="#"><?= $categories[$i]; ?></a>
+                                        <span class="main-navigation__list-item-count"><?= projects_count($do_list, $categories[$i]); ?></span>
                                     </li>
                                 <?php endif; ?>
                             <?php } ?>
@@ -144,7 +63,7 @@ function projects_count(array $projects, string $name): int
             </section>
 
             <main class="content__main">
-                <?= $content ?>
+                <?= $content; ?>
             </main>
         </div>
     </div>
