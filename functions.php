@@ -15,7 +15,7 @@ function render_content(string $path, array $array): string
     }
 
     ob_start();
-    extract($array, EXTR_PREFIX_SAME, 'render');
+    extract($array, EXTR_OVERWRITE);
     require_once($path);
     return ob_get_clean();
 }
