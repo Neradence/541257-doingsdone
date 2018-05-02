@@ -1,7 +1,7 @@
 <?php
 
 define('ABSPATH', __DIR__);
-require_once ABSPATH.'./functions.php';
+require_once ABSPATH.'/functions.php';
 
 // показывать или нет выполненные задачи
 $show_complete_tasks = rand(0, 1);
@@ -55,7 +55,18 @@ $do_list = [
 
 ];
 
-$page_content = render_content(ABSPATH.'./templates/index.php', ['show_complete_tasks' => $show_complete_tasks, 'do_list' => $do_list]);
-$layout_content = render_content(ABSPATH.'./templates/layout.php', ['content' => $page_content, 'do_list' => $do_list, 'categories' => $categories, 'title' => 'Дела в порядке - Главная', 'user_name' => 'Константин']);
+$page_content = render_content(ABSPATH . '/templates/index.php',
+    [
+        'show_complete_tasks' => $show_complete_tasks,
+        'do_list' => $do_list
+    ]);
+$layout_content = render_content(ABSPATH . '/templates/layout.php',
+    [
+        'content' => $page_content,
+        'do_list' => $do_list,
+        'categories' => $categories,
+        'title' => 'Дела в порядке - Главная',
+        'user_name' => 'Константин'
+    ]);
 
 print($layout_content);
