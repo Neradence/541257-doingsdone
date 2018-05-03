@@ -24,8 +24,8 @@
 <table class="tasks">
     <?php if (isset($do_list) && is_array($do_list)) : ?>
         <?php foreach ($do_list as $key) { ?>
-            <?php if ((1 === $show_complete_tasks) && ($key['done']) || (false === ($key['done']))) : ?>
-                <tr class="tasks__item task<?= isset($key['done']) && $key['done'] ? " task--completed" : ""; ?>">
+            <?php if (((1 === $show_complete_tasks) && isset($key['done']) && $key['done']) || (isset($key['done']) && (false === $key['done']))) : ?>
+                <tr class="tasks__item task<?= $key['done'] ? " task--completed" : ""; ?>">
                     <td class="task__select">
                         <label class="checkbox task__checkbox">
                             <?php if (isset($key['name'], $key['done'])): ?>
