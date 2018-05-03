@@ -25,7 +25,12 @@
     <?php if (isset($do_list) && is_array($do_list)) : ?>
         <?php foreach ($do_list as $key) { ?>
             <?php if ((1 === $show_complete_tasks && isset($key['done']) && $key['done']) || (isset($key['done']) && false === $key['done'])) : ?>
-                <tr class="tasks__item task<?= $key['done'] ? " task--completed" : ""; ?>">
+                <!--потому что нет смысла окрашивать уже сделанные задачи, где done=true-->
+                <?php if (isset($key['date']) && important_date($key['date']) && false === $key['done']) : ?>
+                    <tr class="tasks__item task--important">
+                <?php else : ?>
+                    <tr class="tasks__item task<?= isset($key['done']) && $key['done'] ? " task--completed" : ""; ?>" ?>
+                <?php endif; ?>
                     <td class="task__select">
                         <label class="checkbox task__checkbox">
                             <?php if (isset($key['name'], $key['done'])): ?>
