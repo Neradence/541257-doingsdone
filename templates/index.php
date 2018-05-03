@@ -24,20 +24,22 @@
 <table class="tasks">
     <?php if (isset($do_list) && is_array($do_list)) : ?>
         <?php foreach ($do_list as $key) { ?>
-            <tr class="tasks__item task<?= isset($key['done']) && $key['done'] ? " task--completed" : ""; ?>">
-                <td class="task__select">
-                    <label class="checkbox task__checkbox">
-                        <?php if (isset($key['name'], $key['done'])): ?>
-                            <input class="checkbox__input visually-hidden" type="checkbox"<?= (true === $key['done']) ? " checked" : ""; ?>>
-                            <span class="checkbox__text"><?= isset($key['name']) ? htmlspecialchars($key['name']): ""; ?></span>
-                        <?php endif; ?>
-                    </label>
-                </td>
-                <?php if (isset($key['date'])): ?>
-                    <td class="task__date"><?= isset($key['date']) ? htmlspecialchars($key['date']): ""; ?></td>
-                <?php endif; ?>
-                <td class="task__controls"></td>
-            </tr>
+            <?php if ((1 === $show_complete_tasks) && ($key['done']) || (false === ($key['done']))) : ?>
+                <tr class="tasks__item task<?= isset($key['done']) && $key['done'] ? " task--completed" : ""; ?>">
+                    <td class="task__select">
+                        <label class="checkbox task__checkbox">
+                            <?php if (isset($key['name'], $key['done'])): ?>
+                                <input class="checkbox__input visually-hidden" type="checkbox"<?= (true === $key['done']) ? " checked" : ""; ?>>
+                                <span class="checkbox__text"><?= isset($key['name']) ? htmlspecialchars($key['name']): ""; ?></span>
+                            <?php endif; ?>
+                        </label>
+                    </td>
+                    <?php if (isset($key['date'])): ?>
+                        <td class="task__date"><?= isset($key['date']) ? htmlspecialchars($key['date']): ""; ?></td>
+                    <?php endif; ?>
+                    <td class="task__controls"></td>
+                </tr>
+            <?php endif; ?>
         <?php } ?>
     <?php endif; ?>
 </table>

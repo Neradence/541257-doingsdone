@@ -1,6 +1,6 @@
 <?php
 
-define('ABSPATH', __DIR__);
+require_once __DIR__.'/config.php';
 require_once ABSPATH.'/functions.php';
 
 // показывать или нет выполненные задачи
@@ -55,12 +55,12 @@ $do_list = [
 
 ];
 
-$page_content = render_content(ABSPATH . '/templates/index.php',
+$page_content = render_content(TEMPPATH.'/index.php',
     [
         'show_complete_tasks' => $show_complete_tasks,
         'do_list' => $do_list
     ]);
-$layout_content = render_content(ABSPATH . '/templates/layout.php',
+$layout_content = render_content(TEMPPATH.'/layout.php',
     [
         'content' => $page_content,
         'do_list' => $do_list,
