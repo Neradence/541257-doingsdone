@@ -1,4 +1,5 @@
 <?php
+declare(strict_types = 1);
 
 require_once __DIR__.'/config.php';
 require_once ABSPATH.'/functions.php';
@@ -20,21 +21,21 @@ $do_list = [
 
     [
         "name" => "Выполнить тестовое задание",
-        "date" => "25.05.2018",
+        "date" => "04.05.2018",
         "category" => "Работа",
         "done" => false,
     ],
 
     [
         "name" => "Сделать задание первого раздела",
-        "date" => "21.04.2018",
+        "date" => "20.04.2018",
         "category" => "Учёба",
         "done" => true,
     ],
 
     [
         "name" => "Встреча с другом",
-        "date" => "22.04.2018",
+        "date" => "22.05.2018",
         "category" => "Входящие",
         "done" => false,
     ],

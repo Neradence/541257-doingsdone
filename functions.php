@@ -1,4 +1,5 @@
 <?php
+declare(strict_types = 1);
 
 /**
  * Собирает содержимое в буфер и выводит его
@@ -10,7 +11,7 @@
  */
 function render_content(string $path, array $array): string
 {
-    if (false === (file_exists($path))) {
+    if (! file_exists($path)) {
         return "";
     }
 
@@ -44,4 +45,22 @@ function projects_count(array $projects, string $name): int
 
     return $count;
 
+}
+
+/**
+ * Проверяет, что до полученной даты осталось <= 24 часов
+ *
+ * @param string $date
+ * @return bool
+ */
+function is_date_important(string $date): bool
+{
+    if (! strtotime($date)) {
+        return false;
+    }
+
+    //чтобы получить количество часов
+    $dates_subtraction = floor((strtotime($date.' 24:00:00') - time()) / (60*60));
+
+    return ($dates_subtraction <= 24);
 }
