@@ -11,7 +11,7 @@ declare(strict_types = 1);
  */
 function render_content(string $path, array $array): string
 {
-    if (false === (file_exists($path))) {
+    if (! file_exists($path)) {
         return "";
     }
 
@@ -55,7 +55,7 @@ function projects_count(array $projects, string $name): int
  */
 function is_date_important(string $date): bool
 {
-    if (false === strtotime($date)) {
+    if (! strtotime($date)) {
         return false;
     }
 
