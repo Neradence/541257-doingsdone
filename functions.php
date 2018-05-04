@@ -1,4 +1,5 @@
 <?php
+declare(strict_types = 1);
 
 /**
  * Собирает содержимое в буфер и выводит его
@@ -50,16 +51,16 @@ function projects_count(array $projects, string $name): int
  * Считает количество оставшихся до указанной даты часов, false - если их меньше 24, и задача переходит в важные
  *
  * @param string $date
- * @return int
+ * @return bool
  */
-function important_date(string $date): int
+function is_date_important(string $date): bool
 {
-    if ('Нет' === $date) {
+    if (false === strtotime($date)) {
         return false;
     }
 
     //делим на количество секунд в часах, чтобы получить количество часов и, если осталось <= 24, выводить предупреждение
-    $dates_subtraction = floor((strtotime($date) - strtotime(date("d-m-Y"))) / 3600);
+    $dates_subtraction = floor((strtotime($date.'00:00:00') - time()) / 3600);
 
     return ($dates_subtraction <= 24);
 }
