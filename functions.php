@@ -60,7 +60,7 @@ function is_date_important(string $date): bool
     }
 
     //чтобы получить количество часов
-    $dates_subtraction = floor((strtotime($date.' 00:00:00') - time()) / 60*60);
+    $dates_subtraction = floor((strtotime($date.' 00:00:00') - time()) / (60*60));
 
     return ($dates_subtraction <= 24);
 }
