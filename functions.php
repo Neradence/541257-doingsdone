@@ -48,7 +48,7 @@ function projects_count(array $projects, string $name): int
 }
 
 /**
- * Считает количество оставшихся до указанной даты часов, false - если их меньше 24, и задача переходит в важные
+ * Проверяет, что до полученной даты осталось <= 24 часов
  *
  * @param string $date
  * @return bool
@@ -59,8 +59,8 @@ function is_date_important(string $date): bool
         return false;
     }
 
-    //делим на количество секунд в часах, чтобы получить количество часов и, если осталось <= 24, выводить предупреждение
-    $dates_subtraction = floor((strtotime($date.'00:00:00') - time()) / 3600);
+    //чтобы получить количество часов
+    $dates_subtraction = floor((strtotime($date.' 00:00:00') - time()) / 60*60);
 
     return ($dates_subtraction <= 24);
 }
