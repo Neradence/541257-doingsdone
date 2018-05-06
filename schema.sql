@@ -7,10 +7,10 @@ CREATE DATABASE doingsdone
 	CREATE TABLE `tasks` (
 	`id` INT AUTO_INCREMENT PRIMARY KEY,
 	`created_at` DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
-	`done_at` DATETIME NOT NULL,
+	`done_at` DATETIME NULL DEFAULT NULL,
 	`name` CHAR(128) NOT NULL,
-	`file` CHAR(128) NOT NULL,
-	`deadline` DATETIME NOT NULL,
+	`file` CHAR(128) NULL DEFAULT NULL,
+	`deadline` DATETIME NULL DEFAULT NULL,
 	`user_id` INT NOT NULL,
 	`project_id` INT NOT NULL
 );
@@ -23,11 +23,12 @@ CREATE DATABASE doingsdone
 		`id` INT AUTO_INCREMENT PRIMARY KEY,
 		`created_at` DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
 		`email` CHAR(128) NOT NULL,
-		`name` CHAR(128) NOT NULL,
+		`name` CHAR(128) NULL DEFAULT NULL,
 		`password` CHAR(64) NOT NULL,
-		`contacts` CHAR(255) NOT NULL
+		`contacts` CHAR(255) NULL DEFAULT NULL
 	);
 
+	CREATE UNIQUE INDEX un_email ON users(email);
 	CREATE INDEX users_name ON users(name);
 	
 	CREATE TABLE `projects` (
@@ -36,6 +37,5 @@ CREATE DATABASE doingsdone
 		`user_id` INT NOT NULL
 	);
 		
-	CREATE UNIQUE INDEX un_email ON users(email);
 	CREATE INDEX projects_name ON projects(name);
 	CREATE INDEX projects_userid ON projects(user_id);
