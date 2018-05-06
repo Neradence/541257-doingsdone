@@ -1,37 +1,41 @@
-CREATE DATABASE doing
+CREATE DATABASE doingsdone
 	DEFAULT CHARACTER SET utf8
-	DEFAULT COLLATE utf8_general_ci
+	DEFAULT COLLATE utf8_general_ci;
 	
-	USE `doingsdone`
+	USE `doingsdone`;
 	
 	CREATE TABLE `tasks` (
-	`id` INT NOT NULL AUTO_INCREMENT PRIMARY KEY,
-	`create-date` DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
-	`done-date` DATETIME NULL DEFAULT NULL,
-	`name` CHAR(64) NULL DEFAULT NULL,
-	`file-link` CHAR(128) NULL DEFAULT NULL,
-	`time` DATETIME NULL DEFAULT NULL,
-	`author` INT NULL DEFAULT NULL,
-	`project` INT NULL DEFAULT NULL
+	`id` INT AUTO_INCREMENT PRIMARY KEY,
+	`created_at` DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
+	`done_at` DATETIME NULL DEFAULT NULL,
+	`name` CHAR(128) NULL DEFAULT NULL,
+	`file` CHAR(128) NULL DEFAULT NULL,
+	`deadline` DATETIME NULL DEFAULT NULL,
+	`user_id` INT NULL DEFAULT NULL,
+	`project_id` INT NULL DEFAULT NULL
 );
 
-CREATE TABLE `users` (
-	`id` INT NOT NULL AUTO_INCREMENT PRIMARY KEY,
-	`reg-date` DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
-	`email` CHAR(128) NOT NULL,
-	`name` CHAR(128) NULL DEFAULT NULL,
-	`pass` CHAR(64) NOT NULL,
-	`contacts` CHAR(128) NULL DEFAULT NULL
-);
-	
-CREATE TABLE `projects` (
-	`id` INT NOT NULL AUTO_INCREMENT PRIMARY KEY,
-	`name` CHAR(64) NOT NULL,
-	`author` INT NOT NULL
-);
-	
-	CREATE UNIQUE INDEX un_email ON users(email);
 	CREATE INDEX task_name ON tasks(name);
+	CREATE INDEX task_userid ON tasks(user_id);
+	CREATE INDEX task_projectid ON tasks(project_id);
+
+	CREATE TABLE `users` (
+		`id` INT AUTO_INCREMENT PRIMARY KEY,
+		`reg_date` DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
+		`email` CHAR(128) NOT NULL,
+		`name` CHAR(128) NULL DEFAULT NULL,
+		`pass` CHAR(64) NOT NULL,
+		`contacts` CHAR(255) NULL DEFAULT NULL
+	);
+
 	CREATE INDEX users_name ON users(name);
-	CREATE INDEX projects_name ON projects(name);
 	
+	CREATE TABLE `projects` (
+		`id` INT AUTO_INCREMENT PRIMARY KEY,
+		`name` CHAR(128) NOT NULL,
+		`user_id` INT NOT NULL
+	);
+		
+	CREATE UNIQUE INDEX un_email ON users(email);
+	CREATE INDEX projects_name ON projects(name);
+	CREATE INDEX projects_userid ON projects(user_id);
