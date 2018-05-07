@@ -46,11 +46,11 @@ SET name = 'Заказать пиццу', user_id = '3', project_id = '5';
 /*select*/
 
 /*получить список из всех проектов для одного пользователя*/
-SELECT user_id, name FROM projects
+SELECT * FROM projects
 WHERE user_id = 1;
 
 /*получить список из всех задач для одного проекта*/
-SELECT project_id, name FROM tasks
+SELECT * FROM tasks
 WHERE project_id = 1;
 
 /*пометить задачу как выполненную*/
@@ -58,7 +58,7 @@ UPDATE tasks SET done_at = CURRENT_TIMESTAMP
 WHERE id = 2;
 
 /*получить все задачи для завтрашнего дня*/
-SELECT name FROM tasks 
+SELECT * FROM tasks 
 WHERE deadline BETWEEN (CURDATE() + INTERVAL 1 DAY) AND (CURDATE() + INTERVAL 2 DAY);
 
 /*обновить название задачи по её идентификатору*/
