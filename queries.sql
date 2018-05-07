@@ -46,11 +46,11 @@ SET name = 'Заказать пиццу', user_id = '3', project_id = '5';
 /*select*/
 
 /*получить список из всех проектов для одного пользователя*/
-SELECT p.name, u.name FROM projects p JOIN users u ON p.user_id = u.id
+SELECT user_id, name FROM projects
 WHERE user_id = 1;
 
 /*получить список из всех задач для одного проекта*/
-SELECT t.name, p.name FROM tasks t JOIN projects p ON t.project_id = p.id
+SELECT project_id, name FROM tasks
 WHERE project_id = 1;
 
 /*пометить задачу как выполненную*/
@@ -59,7 +59,7 @@ WHERE id = 2;
 
 /*получить все задачи для завтрашнего дня*/
 SELECT name FROM tasks 
-WHERE (deadline > '2018-05-07 00:00:00') and (deadline < '2018-05-08 00:00:00');
+WHERE deadline BETWEEN (CURDATE() + INTERVAL 1 DAY) AND (CURDATE() + INTERVAL 2 DAY);
 
 /*обновить название задачи по её идентификатору*/
 UPDATE tasks SET name = 'Новое имя задачи'
