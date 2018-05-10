@@ -7,7 +7,10 @@ INSERT INTO users
 SET created_at = '2018-04-01 06:13:34', email = 'blablabla@email.com', name = 'Константин', password = 'wordpass', contacts = '+7 111 111 11 11';
 
 INSERT INTO users
-SET created_at = '2018-04-20 23:28:07', email = 'mix@email.com', name = 'Екатерина', password = 'strong', contacts = '+7 222 22 22 22';
+SET created_at = '2018-04-20 23:28:07', email = 'mix@email.com', name = 'Екатерина', password = 'strong', contacts = '+7 222 222 22 22';
+
+INSERT INTO users
+SET created_at = '2018-10-05 22:57:07', email = 'lalaley@email.com', name = 'Григорий', password = 'secret', contacts = '+7 333 333 33 33';
 
 /*projects*/
 
@@ -22,6 +25,15 @@ SET name = 'Личные встречи', user_id = '1';
 
 INSERT INTO projects
 SET name = 'Домашние дела', user_id = '3';
+
+INSERT INTO projects
+SET name = 'Домашние дела', user_id = '4';
+
+INSERT INTO projects
+SET name = 'Котик', user_id = '4';
+
+INSERT INTO projects
+SET name = 'Работа', user_id = '4';
 
 /*tasks*/
 
@@ -42,6 +54,18 @@ SET name = 'Купить корм для кота', user_id = '3', project_id = 
 
 INSERT INTO tasks
 SET name = 'Заказать пиццу', user_id = '3', project_id = '5';
+
+INSERT INTO tasks
+SET name = 'Купить корм', user_id = '4', project_id = '7';
+
+INSERT INTO tasks
+SET deadline = '2018-05-22 16:36:05', name = 'Помыть полы', user_id = '4', project_id = '6';
+
+INSERT INTO tasks
+SET name = 'Купить ошейник', user_id = '4', project_id = '7';
+
+INSERT INTO tasks
+SET deadline = '2018-05-10 16:36:05', name = 'Заполнить таблицу', user_id = '4', project_id = '8';
 
 /*select*/
 

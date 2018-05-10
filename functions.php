@@ -60,7 +60,24 @@ function is_date_important(string $date): bool
     }
 
     //чтобы получить количество часов
-    $dates_subtraction = floor((strtotime($date.' 24:00:00') - time()) / (60*60));
+    $dates_subtraction = floor((strtotime($date) - time()) / (60*60));
 
     return ($dates_subtraction <= 24);
+}
+
+/**
+ * Преобразование двумерного массива в одномерный
+ *
+ * @param array $array
+ * @return array
+ */
+function gone_to_simple_array(array $array): array
+{
+
+    $arrOut = array('Все');
+    foreach($array as $key) {
+        $arrOut = array_merge($arrOut,$key);
+    }
+
+    return $arrOut;
 }

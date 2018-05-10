@@ -7,54 +7,27 @@ require_once ABSPATH.'/functions.php';
 // показывать или нет выполненные задачи
 $show_complete_tasks = rand(0, 1);
 
-//одномерный массив с перечнем категорий
-$categories = ["Все", "Входящие", "Учёба", "Работа", "Домашние дела", "Авто"];
+$con = mysqli_connect("localhost", "root", "", doingsdone);
 
-//двумерный массив с задачами
-$do_list = [
-    [
-        "name" => "Собеседование в IT компании",
-        "date" => "01.06.2018",
-        "category" => "Работа",
-        "done" => false,
-    ],
+if (!$con) {
+    print("Ошибка подключения: " . mysqli_connect_error());
+}
 
-    [
-        "name" => "Выполнить тестовое задание",
-        "date" => "04.05.2018",
-        "category" => "Работа",
-        "done" => false,
-    ],
+$id = 2;
 
-    [
-        "name" => "Сделать задание первого раздела",
-        "date" => "20.04.2018",
-        "category" => "Учёба",
-        "done" => true,
-    ],
+$sql = "SELECT DISTINCT name FROM projects WHERE user_id = (?)";
+$stmt = mysqli_prepare($con, $sql);
+mysqli_stmt_bind_param($stmt, 'd', $id);
+mysqli_stmt_execute($stmt);
+$result = mysqli_stmt_get_result($stmt);
+$categories = gone_to_simple_array(mysqli_fetch_all($result));
 
-    [
-        "name" => "Встреча с другом",
-        "date" => "22.05.2018",
-        "category" => "Входящие",
-        "done" => false,
-    ],
-
-    [
-        "name" => "Купить корм для кота",
-        "date" => "Нет",
-        "category" => "Домашние дела",
-        "done" => false,
-    ],
-
-    [
-        "name" => "Заказать пиццу",
-        "date" => "Нет",
-        "category" => "Домашние дела",
-        "done" => false,
-    ]
-
-];
+$sql = "SELECT t.name, t.deadline as date, p.name as category, (t.done_at is not null) as done FROM tasks t JOIN projects p ON t.project_id = p.id WHERE t.user_id = (?)";
+$stmt = mysqli_prepare($con, $sql);
+mysqli_stmt_bind_param($stmt, 'd', $id);
+mysqli_stmt_execute($stmt);
+$result = mysqli_stmt_get_result($stmt);
+$do_list = mysqli_fetch_all($result, MYSQLI_ASSOC);
 
 $page_content = render_content(TEMPPATH.'/index.php',
     [
