@@ -65,19 +65,55 @@ function is_date_important(string $date): bool
     return ($dates_subtraction <= 24);
 }
 
-/**
- * Преобразование двумерного массива в одномерный
- *
- * @param array $array
- * @return array
- */
-function gone_to_simple_array(array $array): array
+/*function connect_to_database (): mysqli
 {
+    $con = mysqli_connect(DB_HOST, DB_USER, DB_PASSWORD, DB_NAME);
+    $con -> set_charset(utf8);
 
-    $arrOut = array('Все');
-    foreach($array as $key) {
-        $arrOut = array_merge($arrOut,$key);
+    if (!$con) {
+        die();
     }
 
-    return $arrOut;
+    return $con;
+}*/
+
+/**
+ * Получает все категории для пользователя по его id
+ *
+ * @param $con
+ * @param $id
+ * @return array
+ */
+function get_projects_by_user_id ($con, $id): array
+{
+    $sql = "SELECT DISTINCT name FROM projects WHERE user_id = (?)";
+    $stmt = mysqli_prepare($con, $sql);
+    mysqli_stmt_bind_param($stmt, 'd', $id);
+    mysqli_stmt_execute($stmt);
+    $result = mysqli_stmt_get_result($stmt);
+
+    $array_out = mysqli_fetch_all($result,MYSQLI_ASSOC);
+
+    //добавляет в начало список Все, который нужен для перечня категорий
+    $first_el = array_unshift($array_out, ["name" => 'Все']);
+
+    return $array_out;
+}
+
+/**
+ * Получает все задачи для пользователя по его id
+ *
+ * @param $con
+ * @param $id
+ * @return array
+ */
+function get_tasks_by_user_id ($con, $id): array
+{
+    $sql = "SELECT t.name, t.deadline as date, p.name as category, (t.done_at is not null) as done FROM tasks t JOIN projects p ON t.project_id = p.id WHERE t.user_id = (?)";
+    $stmt = mysqli_prepare($con, $sql);
+    mysqli_stmt_bind_param($stmt, 'd', $id);
+    mysqli_stmt_execute($stmt);
+    $result = mysqli_stmt_get_result($stmt);
+
+    return mysqli_fetch_all($result,MYSQLI_ASSOC);
 }

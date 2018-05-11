@@ -7,38 +7,25 @@ require_once ABSPATH.'/functions.php';
 // показывать или нет выполненные задачи
 $show_complete_tasks = rand(0, 1);
 
-$con = mysqli_connect("localhost", "root", "", doingsdone);
+$con = mysqli_connect(DB_HOST, DB_USER, DB_PASSWORD, DB_NAME);
+$con -> set_charset(utf8);
 
 if (!$con) {
-    print("Ошибка подключения: " . mysqli_connect_error());
+    die();
 }
 
 $id = 2;
 
-$sql = "SELECT DISTINCT name FROM projects WHERE user_id = (?)";
-$stmt = mysqli_prepare($con, $sql);
-mysqli_stmt_bind_param($stmt, 'd', $id);
-mysqli_stmt_execute($stmt);
-$result = mysqli_stmt_get_result($stmt);
-$categories = gone_to_simple_array(mysqli_fetch_all($result));
-
-$sql = "SELECT t.name, t.deadline as date, p.name as category, (t.done_at is not null) as done FROM tasks t JOIN projects p ON t.project_id = p.id WHERE t.user_id = (?)";
-$stmt = mysqli_prepare($con, $sql);
-mysqli_stmt_bind_param($stmt, 'd', $id);
-mysqli_stmt_execute($stmt);
-$result = mysqli_stmt_get_result($stmt);
-$do_list = mysqli_fetch_all($result, MYSQLI_ASSOC);
-
 $page_content = render_content(TEMPPATH.'/index.php',
     [
         'show_complete_tasks' => $show_complete_tasks,
-        'do_list' => $do_list
+        'do_list' => get_tasks_by_user_id($con, $id),
     ]);
 $layout_content = render_content(TEMPPATH.'/layout.php',
     [
         'content' => $page_content,
-        'do_list' => $do_list,
-        'categories' => $categories,
+        'do_list' => get_tasks_by_user_id($con, $id),
+        'categories' => get_projects_by_user_id($con, $id),
         'title' => 'Дела в порядке - Главная',
         'user_name' => 'Константин'
     ]);
