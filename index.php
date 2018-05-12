@@ -11,10 +11,10 @@ $con = mysqli_connect(DB_HOST, DB_USER, DB_PASSWORD, DB_NAME);
 $con -> set_charset(utf8);
 
 if (!$con) {
-    die();
+    die($error_message);
 }
 
-$id = 2;
+$id = 4;
 
 $page_content = render_content(TEMPPATH.'/index.php',
     [

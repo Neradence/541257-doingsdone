@@ -86,18 +86,22 @@ function is_date_important(string $date): bool
  */
 function get_projects_by_user_id ($con, $id): array
 {
-    $sql = "SELECT DISTINCT name FROM projects WHERE user_id = (?)";
+    $sql = "SELECT
+              DISTINCT name
+              FROM projects
+              WHERE user_id = ?";
     $stmt = mysqli_prepare($con, $sql);
     mysqli_stmt_bind_param($stmt, 'd', $id);
     mysqli_stmt_execute($stmt);
     $result = mysqli_stmt_get_result($stmt);
 
-    $array_out = mysqli_fetch_all($result,MYSQLI_ASSOC);
+    $projects = mysqli_fetch_all($result,MYSQLI_ASSOC);
 
-    //добавляет в начало список Все, который нужен для перечня категорий
-    $first_el = array_unshift($array_out, ["name" => 'Все']);
-
-    return $array_out;
+    if (isset($projects) && is_array($projects)) {
+        //добавляет в начало список Все, который нужен для перечня категорий
+        array_unshift($projects, ["name" => 'Все']);
+        return $projects;
+    }
 }
 
 /**
@@ -109,11 +113,22 @@ function get_projects_by_user_id ($con, $id): array
  */
 function get_tasks_by_user_id ($con, $id): array
 {
-    $sql = "SELECT t.name, t.deadline as date, p.name as category, (t.done_at is not null) as done FROM tasks t JOIN projects p ON t.project_id = p.id WHERE t.user_id = (?)";
+    $sql = "SELECT
+              t.name,
+              t.deadline as date,
+              p.name as category,
+              (t.done_at is not null) as done
+              FROM tasks t
+              JOIN projects p
+              ON t.project_id = p.id
+              WHERE t.user_id = ?";
     $stmt = mysqli_prepare($con, $sql);
     mysqli_stmt_bind_param($stmt, 'd', $id);
     mysqli_stmt_execute($stmt);
     $result = mysqli_stmt_get_result($stmt);
+    $tasks = mysqli_fetch_all($result,MYSQLI_ASSOC);
 
-    return mysqli_fetch_all($result,MYSQLI_ASSOC);
+    if (isset($tasks) && is_array($tasks)) {
+        return $tasks;
+    }
 }
