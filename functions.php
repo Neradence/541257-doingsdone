@@ -1,6 +1,8 @@
 <?php
 declare(strict_types = 1);
 
+require_once __DIR__.'/config.php';
+
 /**
  * Собирает содержимое в буфер и выводит его
  *
@@ -65,27 +67,21 @@ function is_date_important(string $date): bool
     return ($dates_subtraction <= 24);
 }
 
-/*function connect_to_database (): mysqli
+/**
+ * Получает все категории для пользователя по его id
+ *
+ * @param $id
+ * @return array
+ */
+function get_projects_by_user_id ($id): array
 {
     $con = mysqli_connect(DB_HOST, DB_USER, DB_PASSWORD, DB_NAME);
     $con -> set_charset(utf8);
 
     if (!$con) {
-        die();
+        die("Ошибка соедиения с базой данных.");
     }
 
-    return $con;
-}*/
-
-/**
- * Получает все категории для пользователя по его id
- *
- * @param $con
- * @param $id
- * @return array
- */
-function get_projects_by_user_id ($con, $id): array
-{
     $sql = "SELECT
               DISTINCT name
               FROM projects
@@ -95,24 +91,35 @@ function get_projects_by_user_id ($con, $id): array
     mysqli_stmt_execute($stmt);
     $result = mysqli_stmt_get_result($stmt);
 
-    $projects = mysqli_fetch_all($result,MYSQLI_ASSOC);
+    mysql_close;
 
-    if (isset($projects) && is_array($projects)) {
+    if (!$result) {
+        print "Ошибка MySQL";
+    }
+    else {
+        $projects = mysqli_fetch_all($result,MYSQLI_ASSOC);
         //добавляет в начало список Все, который нужен для перечня категорий
         array_unshift($projects, ["name" => 'Все']);
         return $projects;
     }
+
 }
 
 /**
  * Получает все задачи для пользователя по его id
  *
- * @param $con
  * @param $id
  * @return array
  */
-function get_tasks_by_user_id ($con, $id): array
+function get_tasks_by_user_id ($id): array
 {
+    $con = mysqli_connect(DB_HOST, DB_USER, DB_PASSWORD, DB_NAME);
+    $con -> set_charset(utf8);
+
+    if (!$con) {
+        die("Ошибка соедиения с базой данных.");
+    }
+
     $sql = "SELECT
               t.name,
               t.deadline as date,
@@ -126,9 +133,14 @@ function get_tasks_by_user_id ($con, $id): array
     mysqli_stmt_bind_param($stmt, 'd', $id);
     mysqli_stmt_execute($stmt);
     $result = mysqli_stmt_get_result($stmt);
-    $tasks = mysqli_fetch_all($result,MYSQLI_ASSOC);
 
-    if (isset($tasks) && is_array($tasks)) {
+    mysql_close;
+
+    if (!$result) {
+        print "Ошибка MySQL";
+    }
+    else {
+        $tasks = mysqli_fetch_all($result,MYSQLI_ASSOC);
         return $tasks;
     }
 }
