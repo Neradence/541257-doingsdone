@@ -7,7 +7,7 @@ require_once ABSPATH.'/functions.php';
 // показывать или нет выполненные задачи
 $show_complete_tasks = rand(0, 1);
 
-$id = 4;
+$id = 2;
 
 $page_content = render_content(TEMPPATH.'/index.php',
     [

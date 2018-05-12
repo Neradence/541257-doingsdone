@@ -91,8 +91,8 @@ function get_projects_by_user_id ($id): array
     mysqli_stmt_execute($stmt);
     $result = mysqli_stmt_get_result($stmt);
 
-    if (!$result) {
-        die("Ошибка MySQL" . mysqli_error($con));
+    if (!$con) {
+        die("Ошибка MySQL" . mysqli_stmt_error($stmt));
     }
 
     $projects = mysqli_fetch_all($result,MYSQLI_ASSOC);
@@ -135,8 +135,8 @@ function get_tasks_by_user_id ($id): array
     mysqli_stmt_execute($stmt);
     $result = mysqli_stmt_get_result($stmt);
 
-    if (!$result) {
-        die("Ошибка MySQL" . mysqli_error($con));
+    if (!$con) {
+        die("Ошибка MySQL" . mysqli_stmt_error($stmt));
     }
 
     $tasks = mysqli_fetch_all($result,MYSQLI_ASSOC);
