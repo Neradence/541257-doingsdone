@@ -76,7 +76,7 @@ function is_date_important(string $date): bool
 function get_projects_by_user_id ($id): array
 {
     $con = mysqli_connect(DB_HOST, DB_USER, DB_PASSWORD, DB_NAME);
-    $con -> set_charset(utf8);
+    $con -> set_charset("utf8");
 
     if (!$con) {
         die("Ошибка соедиения с базой данных.");
@@ -91,17 +91,18 @@ function get_projects_by_user_id ($id): array
     mysqli_stmt_execute($stmt);
     $result = mysqli_stmt_get_result($stmt);
 
-    mysql_close;
-
     if (!$result) {
-        print "Ошибка MySQL";
+        die("Ошибка MySQL" . mysqli_error($con));
     }
-    else {
-        $projects = mysqli_fetch_all($result,MYSQLI_ASSOC);
-        //добавляет в начало список Все, который нужен для перечня категорий
-        array_unshift($projects, ["name" => 'Все']);
-        return $projects;
-    }
+
+    $projects = mysqli_fetch_all($result,MYSQLI_ASSOC);
+
+    //добавляет в начало список Все, который нужен для перечня категорий
+    array_unshift($projects, ["name" => 'Все']);
+
+    mysqli_close($con);
+
+    return $projects;
 
 }
 
@@ -114,7 +115,7 @@ function get_projects_by_user_id ($id): array
 function get_tasks_by_user_id ($id): array
 {
     $con = mysqli_connect(DB_HOST, DB_USER, DB_PASSWORD, DB_NAME);
-    $con -> set_charset(utf8);
+    $con -> set_charset("utf8");
 
     if (!$con) {
         die("Ошибка соедиения с базой данных.");
@@ -134,13 +135,14 @@ function get_tasks_by_user_id ($id): array
     mysqli_stmt_execute($stmt);
     $result = mysqli_stmt_get_result($stmt);
 
-    mysql_close;
-
     if (!$result) {
-        print "Ошибка MySQL";
+        die("Ошибка MySQL" . mysqli_error($con));
     }
-    else {
-        $tasks = mysqli_fetch_all($result,MYSQLI_ASSOC);
-        return $tasks;
-    }
+
+    $tasks = mysqli_fetch_all($result,MYSQLI_ASSOC);
+
+    mysqli_close($con);
+
+    return $tasks;
+
 }
