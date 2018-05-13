@@ -46,10 +46,10 @@
                     <ul class="main-navigation__list">
                         <?php if (isset($categories) && is_array($categories)) : ?>
                             <?php foreach ($categories as $key) { ?>
-                                <?php if (isset($key[name])): ?>
-                                    <li class="main-navigation__list-item<?php echo ('Все' === $key[name]) ? " main-navigation__list-item--active" : ""; ?>">
-                                        <a class="main-navigation__list-item-link" href="#"><?= htmlspecialchars($key[name]); ?></a>
-                                        <span class="main-navigation__list-item-count"><?= projects_count($do_list, $key[name]); ?></span>
+                                <?php if (isset($key['name'])): ?>
+                                    <li class="main-navigation__list-item<?php echo ('Все' === $key['name']) ? " main-navigation__list-item--active" : ""; ?>">
+                                        <a class="main-navigation__list-item-link" href="#"><?= htmlspecialchars($key['name']); ?></a>
+                                        <span class="main-navigation__list-item-count"><?= projects_count($do_list, $key['name']); ?></span>
                                     </li>
                                 <?php endif; ?>
                             <?php } ?>
