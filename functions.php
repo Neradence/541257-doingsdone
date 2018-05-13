@@ -68,31 +68,47 @@ function is_date_important(string $date): bool
 }
 
 /**
- * Получает все категории для пользователя по его id
+ * Соединение с БД
  *
- * @param $id
- * @return array
+ * @return mysqli
  */
-function get_projects_by_user_id ($id): array
+function connect_to_db(): mysqli
 {
     $con = mysqli_connect(DB_HOST, DB_USER, DB_PASSWORD, DB_NAME);
-    $con -> set_charset("utf8");
 
     if (!$con) {
         die("Ошибка соедиения с базой данных.");
     }
+    mysqli_set_charset($con, "utf8");
 
+    return $con;
+}
+
+/**
+ * Получает все категории для пользователя по его id
+ *
+ * @param $con
+ * @param $id
+ * @return array
+ */
+function get_projects_by_user_id($con, $id): array
+{
     $sql = "SELECT
-              DISTINCT name
+              name
               FROM projects
               WHERE user_id = ?";
     $stmt = mysqli_prepare($con, $sql);
+
+    if (!$stmt) {
+        die("Ошибка MySQL".mysqli_error($con));
+    }
+
     mysqli_stmt_bind_param($stmt, 'd', $id);
     mysqli_stmt_execute($stmt);
     $result = mysqli_stmt_get_result($stmt);
 
-    if (!$con) {
-        die("Ошибка MySQL" . mysqli_stmt_error($stmt));
+    if (!$result) {
+        die("Ошибка MySQL" . mysqli_stmt_error($stmt)." в файле ".__FILE__." в строке № ".__LINE__);
     }
 
     $projects = mysqli_fetch_all($result,MYSQLI_ASSOC);
@@ -100,27 +116,19 @@ function get_projects_by_user_id ($id): array
     //добавляет в начало список Все, который нужен для перечня категорий
     array_unshift($projects, ["name" => 'Все']);
 
-    mysqli_close($con);
-
     return $projects;
 
 }
 
 /**
- * Получает все задачи для пользователя по его id
+ * Получает все задачи пользователя по его id
  *
+ * @param $con
  * @param $id
  * @return array
  */
-function get_tasks_by_user_id ($id): array
+function get_tasks_by_user_id($con, $id): array
 {
-    $con = mysqli_connect(DB_HOST, DB_USER, DB_PASSWORD, DB_NAME);
-    $con -> set_charset("utf8");
-
-    if (!$con) {
-        die("Ошибка соедиения с базой данных.");
-    }
-
     $sql = "SELECT
               t.name,
               t.deadline as date,
@@ -131,17 +139,20 @@ function get_tasks_by_user_id ($id): array
               ON t.project_id = p.id
               WHERE t.user_id = ?";
     $stmt = mysqli_prepare($con, $sql);
+
+    if (!$stmt) {
+        die("Ошибка MySQL".mysqli_error($con));
+    }
+
     mysqli_stmt_bind_param($stmt, 'd', $id);
     mysqli_stmt_execute($stmt);
     $result = mysqli_stmt_get_result($stmt);
 
-    if (!$con) {
-        die("Ошибка MySQL" . mysqli_stmt_error($stmt));
+    if (!$result) {
+        die("Ошибка MySQL" . mysqli_stmt_error($stmt)." в файле ".__FILE__." в строке № ".__LINE__);
     }
 
     $tasks = mysqli_fetch_all($result,MYSQLI_ASSOC);
-
-    mysqli_close($con);
 
     return $tasks;
 
