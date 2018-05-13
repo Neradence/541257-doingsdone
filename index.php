@@ -7,65 +7,18 @@ require_once ABSPATH.'/functions.php';
 // показывать или нет выполненные задачи
 $show_complete_tasks = rand(0, 1);
 
-//одномерный массив с перечнем категорий
-$categories = ["Все", "Входящие", "Учёба", "Работа", "Домашние дела", "Авто"];
-
-//двумерный массив с задачами
-$do_list = [
-    [
-        "name" => "Собеседование в IT компании",
-        "date" => "01.06.2018",
-        "category" => "Работа",
-        "done" => false,
-    ],
-
-    [
-        "name" => "Выполнить тестовое задание",
-        "date" => "04.05.2018",
-        "category" => "Работа",
-        "done" => false,
-    ],
-
-    [
-        "name" => "Сделать задание первого раздела",
-        "date" => "20.04.2018",
-        "category" => "Учёба",
-        "done" => true,
-    ],
-
-    [
-        "name" => "Встреча с другом",
-        "date" => "22.05.2018",
-        "category" => "Входящие",
-        "done" => false,
-    ],
-
-    [
-        "name" => "Купить корм для кота",
-        "date" => "Нет",
-        "category" => "Домашние дела",
-        "done" => false,
-    ],
-
-    [
-        "name" => "Заказать пиццу",
-        "date" => "Нет",
-        "category" => "Домашние дела",
-        "done" => false,
-    ]
-
-];
+$id = 4;
 
 $page_content = render_content(TEMPPATH.'/index.php',
     [
         'show_complete_tasks' => $show_complete_tasks,
-        'do_list' => $do_list
+        'do_list' => get_tasks_by_user_id($id),
     ]);
 $layout_content = render_content(TEMPPATH.'/layout.php',
     [
         'content' => $page_content,
-        'do_list' => $do_list,
-        'categories' => $categories,
+        'do_list' => get_tasks_by_user_id($id),
+        'categories' => get_projects_by_user_id($id),
         'title' => 'Дела в порядке - Главная',
         'user_name' => 'Константин'
     ]);

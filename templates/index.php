@@ -39,9 +39,7 @@
                             <?php endif; ?>
                         </label>
                     </td>
-                    <?php if (isset($key['date'])): ?>
                         <td class="task__date"><?= isset($key['date']) ? htmlspecialchars($key['date']): ""; ?></td>
-                    <?php endif; ?>
                     <td class="task__controls"></td>
                 </tr>
             <?php endif; ?>
