@@ -8,11 +8,13 @@ require_once ABSPATH.'/functions.php';
 $show_complete_tasks = rand(0, 1);
 
 $id = 4;
+$project_id = intval($_GET['proj'] ?? '-1');
 
 $page_content = render_content(TEMPPATH.'/index.php',
     [
         'show_complete_tasks' => $show_complete_tasks,
-        'do_list' => get_tasks_by_user_id($id),
+        'do_list' => get_tasks_for_one_project($id, $project_id),
+        'id' => $id
     ]);
 $layout_content = render_content(TEMPPATH.'/layout.php',
     [

@@ -87,15 +87,15 @@ function connect_to_db(): mysqli
 /**
  * Получает все категории для пользователя по его id
  *
- * @param $id
+ * @param int $id
  * @return array
  */
-function get_projects_by_user_id($id): array
+function get_projects_by_user_id(int $id): array
 {
     $con = connect_to_db();
 
     $sql = "SELECT
-              name
+              id, name
               FROM projects
               WHERE user_id = ?";
     $stmt = mysqli_prepare($con, $sql);
@@ -115,7 +115,7 @@ function get_projects_by_user_id($id): array
     $projects = mysqli_fetch_all($result,MYSQLI_ASSOC);
 
     //добавляет в начало список Все, который нужен для перечня категорий
-    array_unshift($projects, ["name" => 'Все']);
+    array_unshift($projects, ["id" => -1, "name" => 'Все']);
 
     mysqli_close($con);
 
@@ -126,10 +126,10 @@ function get_projects_by_user_id($id): array
 /**
  * Получает все задачи пользователя по его id
  *
- * @param $id
+ * @param int $id
  * @return array
  */
-function get_tasks_by_user_id($id): array
+function get_tasks_by_user_id(int $id): array
 {
     $con = connect_to_db();
 
@@ -157,6 +157,56 @@ function get_tasks_by_user_id($id): array
     }
 
     $tasks = mysqli_fetch_all($result,MYSQLI_ASSOC);
+
+    mysqli_close($con);
+
+    return $tasks;
+
+}
+
+/**
+ * Возвращает задачи только для выбранной категории
+ *
+ * @param int $user_id
+ * @param int $project_id
+ * @return array
+ */
+function get_tasks_for_one_project(int $user_id, int $project_id): array
+{
+    $con = connect_to_db();
+
+    $sql = "SELECT 
+              name,
+              deadline as date,
+              (done_at is not null) as done
+              FROM tasks
+              WHERE user_id = ?";
+
+    if (-1 !== $project_id) {
+        $sql = $sql . " AND project_id = ?";
+    }
+
+    $stmt = mysqli_prepare($con, $sql);
+
+    if (!$stmt) {
+        die("Ошибка MySQL ".mysqli_error($con)." в файле ".__FILE__." в строке № ".__LINE__);
+    }
+
+    if (-1 !== $project_id) {
+        mysqli_stmt_bind_param($stmt, 'dd', $user_id, $project_id);
+    }
+    else {
+        mysqli_stmt_bind_param($stmt, 'd', $user_id);
+    }
+
+    mysqli_stmt_execute($stmt);
+    $result = mysqli_stmt_get_result($stmt);
+
+    if (!$result) {
+        die("Ошибка MySQL " . mysqli_stmt_error($stmt)." в файле ".__FILE__." в строке № ".__LINE__);
+    }
+
+    $tasks = mysqli_fetch_all($result, MYSQLI_ASSOC);
 
     mysqli_close($con);
 
