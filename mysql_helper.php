@@ -12,6 +12,10 @@
 function db_get_prepare_stmt($link, $sql, $data = []) {
     $stmt = mysqli_prepare($link, $sql);
 
+    if (!$stmt) {
+        die("Ошибка MySQL ".mysqli_error($link)." в файле ".__FILE__." в строке № ".__LINE__);
+    }
+
     if ($data) {
         $types = '';
         $stmt_data = [];
@@ -42,4 +46,22 @@ function db_get_prepare_stmt($link, $sql, $data = []) {
     }
 
     return $stmt;
+}
+
+/**
+ * Из подготовленнного stmt запроса возвращает результат в виде набора ассоциативных массивов
+ *
+ * @param $stmt
+ * @return array
+ */
+function db_get_result_stmt($stmt): array
+{
+    mysqli_stmt_execute($stmt);
+    $result = mysqli_stmt_get_result($stmt);
+
+    if (!$result) {
+        die("Ошибка MySQL " . mysqli_stmt_error($stmt)." в файле ".__FILE__." в строке № ".__LINE__);
+    }
+
+    return mysqli_fetch_all($result,MYSQLI_ASSOC);
 }
