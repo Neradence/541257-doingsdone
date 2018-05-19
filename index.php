@@ -10,7 +10,7 @@ $show_complete_tasks = rand(0, 1);
 $id = 4;
 
 $project_id = isset($_GET['proj']) ? intval($_GET['proj']) : null;
-$projects = get_projects_by_user_id($id);
+$projects = get_tasks_for_one_project($id, $project_id);
 
 if (0 === $project_id || 0 == count($projects)) {
     http_response_code(404);
@@ -20,7 +20,7 @@ if (0 === $project_id || 0 == count($projects)) {
         [
             'content' => $page_content,
             'do_list' => get_tasks_by_user_id($id),
-            'categories' => $projects,
+            'categories' => get_projects_by_user_id($id),
             'title' => 'Дела в порядке - 404',
             'user_name' => 'Константин'
         ]);
@@ -38,7 +38,7 @@ $layout_content = render_content(TEMPPATH.'/layout.php',
     [
         'content' => $page_content,
         'do_list' => get_tasks_by_user_id($id),
-        'categories' => $projects,
+        'categories' => get_projects_by_user_id($id),
         'title' => 'Дела в порядке - Главная',
         'user_name' => 'Константин'
     ]);
