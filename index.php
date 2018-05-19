@@ -9,6 +9,17 @@ $show_complete_tasks = rand(0, 1);
 
 $id = 4;
 
+if (isset($_POST['form_type'])) {
+    switch ($_POST['form_type'])
+    {
+        case 'add_task':
+            $form_state = insert_data_from_form($id);
+    }
+}
+/*if ($_SERVER['REQUEST_METHOD'] = 'POST') {
+    header("Location: /index.php?success=true");
+}*/
+
 $project_id = isset($_GET['proj']) ? intval($_GET['proj']) : null;
 $projects = get_tasks_for_one_project($id, $project_id);
 
@@ -40,7 +51,8 @@ $layout_content = render_content(TEMPPATH.'/layout.php',
         'do_list' => get_tasks_by_user_id($id),
         'categories' => get_projects_by_user_id($id),
         'title' => 'Дела в порядке - Главная',
-        'user_name' => 'Константин'
+        'user_name' => 'Константин',
+        'formstate' => $form_state
     ]);
 
 print($layout_content);
