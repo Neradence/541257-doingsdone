@@ -12,31 +12,20 @@ $id = 4;
 $project_id = isset($_GET['proj']) ? intval($_GET['proj']) : null;
 $projects = get_projects_by_user_id($id);
 
-if (!is_null($project_id)){
-    $hasUserGivenProject = false;
-    foreach ($projects as $project)
-    {
-        if (intval($project['id']) === $project_id) {
-            $hasUserGivenProject = true;
-            break;
-        }
-    }
+if (0 === $project_id || 0 == count($projects)) {
+    http_response_code(404);
 
-    if (!$hasUserGivenProject){
-        http_response_code(404);
-
-        $page_content = render_content(TEMPPATH.'/404.php');
-        $layout_content = render_content(TEMPPATH.'/layout.php',
-            [
-                'content' => $page_content,
-                'do_list' => get_tasks_by_user_id($id),
-                'categories' => $projects,
-                'title' => 'Дела в порядке - Главная',
-                'user_name' => 'Константин'
-            ]);
-        print($layout_content);
-        exit();
-    }
+    $page_content = render_content(TEMPPATH.'/404.php');
+    $layout_content = render_content(TEMPPATH.'/layout.php',
+        [
+            'content' => $page_content,
+            'do_list' => get_tasks_by_user_id($id),
+            'categories' => $projects,
+            'title' => 'Дела в порядке - 404',
+            'user_name' => 'Константин'
+        ]);
+    print($layout_content);
+    exit();
 }
 
 $page_content = render_content(TEMPPATH.'/index.php',
