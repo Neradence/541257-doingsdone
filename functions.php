@@ -2,6 +2,7 @@
 declare(strict_types = 1);
 
 require_once __DIR__.'/config.php';
+require_once __DIR__.'/mysql_helper.php';
 
 /**
  * Собирает содержимое в буфер и выводит его
@@ -11,7 +12,7 @@ require_once __DIR__.'/config.php';
  *
  * @return string
  */
-function render_content(string $path, array $array): string
+function render_content(string $path, array $array = []): string
 {
     if (! file_exists($path)) {
         return "";
@@ -87,32 +88,21 @@ function connect_to_db(): mysqli
 /**
  * Получает все категории для пользователя по его id
  *
- * @param $id
+ * @param int $id
  * @return array
  */
-function get_projects_by_user_id($id): array
+function get_projects_by_user_id(int $id): array
 {
     $con = connect_to_db();
 
     $sql = "SELECT
-              name
+              id, name
               FROM projects
               WHERE user_id = ?";
-    $stmt = mysqli_prepare($con, $sql);
 
-    if (!$stmt) {
-        die("Ошибка MySQL ".mysqli_error($con)." в файле ".__FILE__." в строке № ".__LINE__);
-    }
+    $stmt = db_get_prepare_stmt($con, $sql, [$id]);
 
-    mysqli_stmt_bind_param($stmt, 'd', $id);
-    mysqli_stmt_execute($stmt);
-    $result = mysqli_stmt_get_result($stmt);
-
-    if (!$result) {
-        die("Ошибка MySQL " . mysqli_stmt_error($stmt)." в файле ".__FILE__." в строке № ".__LINE__);
-    }
-
-    $projects = mysqli_fetch_all($result,MYSQLI_ASSOC);
+    $projects = db_get_result_stmt($stmt);
 
     //добавляет в начало список Все, который нужен для перечня категорий
     array_unshift($projects, ["name" => 'Все']);
@@ -126,10 +116,10 @@ function get_projects_by_user_id($id): array
 /**
  * Получает все задачи пользователя по его id
  *
- * @param $id
+ * @param int $id
  * @return array
  */
-function get_tasks_by_user_id($id): array
+function get_tasks_by_user_id(int $id): array
 {
     $con = connect_to_db();
 
@@ -142,21 +132,45 @@ function get_tasks_by_user_id($id): array
               JOIN projects p
               ON t.project_id = p.id
               WHERE t.user_id = ?";
-    $stmt = mysqli_prepare($con, $sql);
 
-    if (!$stmt) {
-        die("Ошибка MySQL ".mysqli_error($con)." в файле ".__FILE__." в строке № ".__LINE__);
+    $stmt = db_get_prepare_stmt($con, $sql, [$id]);
+
+    $tasks = db_get_result_stmt($stmt);
+
+    mysqli_close($con);
+
+    return $tasks;
+
+}
+
+/**
+ * Возвращает задачи только для выбранной категории
+ *
+ * @param int $user_id
+ * @param int|null $project_id
+ * @return array
+ */
+function get_tasks_for_one_project(int $user_id, ?int $project_id): array
+{
+    $con = connect_to_db();
+
+    $sql = "SELECT 
+              name,
+              deadline as date,
+              (done_at is not null) as done
+              FROM tasks
+              WHERE user_id = ?";
+
+    $values = [$user_id];
+
+    if (!is_null($project_id)) {
+        $sql = $sql . " AND project_id = ?";
+        array_push($values, $project_id);
     }
 
-    mysqli_stmt_bind_param($stmt, 'd', $id);
-    mysqli_stmt_execute($stmt);
-    $result = mysqli_stmt_get_result($stmt);
+    $stmt = db_get_prepare_stmt($con, $sql, $values);
 
-    if (!$result) {
-        die("Ошибка MySQL " . mysqli_stmt_error($stmt)." в файле ".__FILE__." в строке № ".__LINE__);
-    }
-
-    $tasks = mysqli_fetch_all($result,MYSQLI_ASSOC);
+    $tasks = db_get_result_stmt($stmt);
 
     mysqli_close($con);
 
