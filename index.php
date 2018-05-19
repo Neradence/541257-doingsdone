@@ -12,7 +12,7 @@ $id = 4;
 $project_id = isset($_GET['proj']) ? intval($_GET['proj']) : null;
 $projects = get_tasks_for_one_project($id, $project_id);
 
-if (0 === $project_id || 0 == count($projects)) {
+if (0 === $project_id || 0 === count($projects)) {
     http_response_code(404);
 
     $page_content = render_content(TEMPPATH.'/404.php');
@@ -31,7 +31,7 @@ if (0 === $project_id || 0 == count($projects)) {
 $page_content = render_content(TEMPPATH.'/index.php',
     [
         'show_complete_tasks' => $show_complete_tasks,
-        'do_list' => get_tasks_for_one_project($id, $project_id),
+        'do_list' => $projects,
         'id' => $id
     ]);
 $layout_content = render_content(TEMPPATH.'/layout.php',
