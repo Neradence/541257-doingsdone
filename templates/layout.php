@@ -1,7 +1,3 @@
-<?php
-declare(strict_types = 1);
-?>
-
 <!DOCTYPE html>
 <html lang="ru">
 
@@ -13,7 +9,7 @@ declare(strict_types = 1);
     <link rel="stylesheet" href="css/flatpickr.min.css">
 </head>
 
-<body <?php if (isset($formstate['form_err'])) echo ' class="overlay" ' ; ?> >
+<body <?php if (isset($formstate['form_err'])) { echo ' class="overlay" ' ; } ?> >
 <h1 class="visually-hidden">Дела в порядке</h1>
 
 <div class="page-wrapper">

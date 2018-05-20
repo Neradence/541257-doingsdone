@@ -3,45 +3,48 @@
 
     <h2 class="modal__heading">Добавление задачи</h2>
 
-    <form class="form"  action="index.php" method="post" enctype="multipart/form-data">
+    <form class="form"  action="/index.php" method="post" enctype="multipart/form-data">
         <input type="hidden" value="add_task" name="form_type" />
 
         <div class="form__row">
             <?php if (isset($formstate['name_err'])) { ?>
                 <p class="p.form__message"><?=$formstate['name_err'];?></p>
-            <?php } ; ?>
+            <?php } ?>
 
             <label class="form__label" for="name">Название <sup>*</sup></label>
 
-            <input class="form__input<?php if (isset($formstate['name_err'])) echo " form__input--error" ; ?>" type="text" name="name" id="name" value="<?=$formstate['name'];?>" placeholder="Введите название">
+            <input class="form__input<?php if (isset($formstate['name_err'])) { echo " form__input--error" ; } ?>" type="text" name="name" id="name" value="<?=$formstate['name'];?>" placeholder="Введите название">
         </div>
 
         <div class="form__row">
             <?php if (isset($formstate['project_err'])) { ?>
                 <p class="p.form__message"><?=$formstate['project_err'];?></p>
-            <?php } ; ?>
+            <?php } ?>
 
             <label class="form__label" for="project">Проект <sup>*</sup></label>
 
-            <select class="form__input form__input--select <?php if (isset($formstate['project_err'])) echo " form__input--error" ; ?>" name="project" id="project">
+            <select class="form__input form__input--select <?php if (isset($formstate['project_err'])) { echo " form__input--error" ; } ?>" name="project" id="project">
+                <?php if (isset($categories) && is_array($categories)) { ; ?>
                     <?php foreach ($categories as $category) { ?>
                         <?php
-                            $is_selected = ($category['id'] === intval($formstate['project'])) ? 'selected' : '';
+                            if (isset($category['id']) && (isset($formstate['project']))) {
+                                $is_selected = ($category['id'] === intval($formstate['project'])) ? 'selected' : '';
+                            }
                         ?>
-
-                        <option value="<?=$category['id']; ?>" <?= $is_selected; ?>><?= $category['name']; ?></option>
-                    <?php } ; ?>
+                        <option value="<?php if (isset($category['id']) && $category['name'] != 'Все') { echo $category['id'] ; } ?>" <?= $is_selected; ?>><?= $category['name']; ?></option>
+                    <?php } ?>
+                <?php } ?>
             </select>
         </div>
 
         <div class="form__row">
             <?php if (isset($formstate['date_err'])) { ?>
                 <p class="p.form__message"><?=$formstate['date_err'];?></p>
-            <?php } ; ?>
+            <?php } ?>
 
             <label class="form__label" for="date">Срок выполнения</label>
 
-            <input class="form__input form__input--date <?php if (isset($formstate['date_err'])) echo " form__input--error" ; ?>" type="text" name="date" id="date" value="<?= $formstate['date']; ?>"
+            <input class="form__input form__input--date <?php if (isset($formstate['date_err'])) { echo " form__input--error" ; } ?>" type="text" name="date" id="date" value="<?= $formstate['date']; ?>"
                    placeholder="Введите дату и время">
         </div>
 

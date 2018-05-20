@@ -184,7 +184,7 @@ function get_tasks_for_one_project(int $user_id, ?int $project_id): array
  * @param int $user_id
  * @return array
  */
-function insert_data_from_form (int $user_id): array
+function create_task_from_form (int $user_id): array
 {
     $con = connect_to_db();
 
@@ -250,6 +250,8 @@ function insert_data_from_form (int $user_id): array
     if (mysqli_stmt_affected_rows($stmt) === 0) {
         die("Ошибка добавления в БД.");
     }
+
+    header('Location: /index.php');
 
     mysqli_close($con);
 

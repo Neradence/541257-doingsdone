@@ -13,12 +13,11 @@ if (isset($_POST['form_type'])) {
     switch ($_POST['form_type'])
     {
         case 'add_task':
-            $form_state = insert_data_from_form($id);
+            $form_state = create_task_from_form($id);
+        define:
+            $form_state = null;
     }
 }
-/*if ($_SERVER['REQUEST_METHOD'] = 'POST') {
-    header("Location: /index.php?success=true");
-}*/
 
 $project_id = isset($_GET['proj']) ? intval($_GET['proj']) : null;
 $projects = get_tasks_for_one_project($id, $project_id);
