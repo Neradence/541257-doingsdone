@@ -131,7 +131,8 @@ function get_tasks_by_user_id(int $id): array
               FROM tasks t
               JOIN projects p
               ON t.project_id = p.id
-              WHERE t.user_id = ?";
+              WHERE t.user_id = ?
+              ORDER BY t.id DESC";
 
     $stmt = db_get_prepare_stmt($con, $sql, [$id]);
 
@@ -167,6 +168,8 @@ function get_tasks_for_one_project(int $user_id, ?int $project_id): array
         $sql = $sql . " AND project_id = ?";
         array_push($values, $project_id);
     }
+
+    $sql = $sql . " ORDER BY id DESC";
 
     $stmt = db_get_prepare_stmt($con, $sql, $values);
 
