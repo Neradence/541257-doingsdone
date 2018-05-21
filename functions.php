@@ -193,7 +193,7 @@ function create_task_from_form (int $user_id): array
     $fname = $_POST['name'] ?? '';
     $fproject = intval($_POST['project']) ?? '';
     $fdate = $_POST['date'] ?? '';
-    $ffile = $_FILES['preview'];
+    $ffile = $_FILES['preview'] ?? [];
 
     $required_fields = ['name', 'project'];
 
@@ -214,8 +214,7 @@ function create_task_from_form (int $user_id): array
 
     $values = [$fname, $user_id, $fproject];
 
-    if (isset($ffile['size']) && isset($ffile['error']) ) {
-        if ($ffile['size'] == 0 && $ffile['error'] == 0) {
+    if (isset($ffile['size'], $ffile['error']) && $ffile['size'] !== 0 && $ffile['error'] === 0) {
             $file_name = $_FILES['preview']['name'];
             $file_url = '/uploads/' . $file_name;
             $file_path = ABSPATH . $file_url;
@@ -226,7 +225,6 @@ function create_task_from_form (int $user_id): array
 
             array_push($values, $file_url);
         }
-    }
 
     if ($fdate !== '') {
         $parsed_date = date_parse_from_format('Y-m-d H:i', $fdate);

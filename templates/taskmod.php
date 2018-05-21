@@ -31,8 +31,10 @@
                                 $is_selected = ($category['id'] === intval($formstate['project'])) ? 'selected' : '';
                             }
                         ?>
-                        <option value="<?php if (isset($category['id']) && $category['name'] !== 'Все') { echo $category['id'] ; } ?>" <?php if (isset($is_selected)) { echo $is_selected; } ?>><?php echo htmlspecialchars($category['name']); ?></option>
-                    <?php } ?>
+                            <?php if (isset($category['id']) && $category['name'] !== 'Все') { ?>
+                                <option value="<?php if (isset($category['id'])) { echo $category['id'] ; } ?>" <?php if (isset($is_selected)) { echo $is_selected; } ?>><?php echo htmlspecialchars($category['name']); ?></option>
+                            <?php } ?>
+                        <?php } ?>
                 <?php } ?>
             </select>
         </div>
