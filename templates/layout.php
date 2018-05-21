@@ -9,7 +9,7 @@
     <link rel="stylesheet" href="css/flatpickr.min.css">
 </head>
 
-<body><!--class="overlay"-->
+<body <?php if (isset($formstate['form_err'])) { echo ' class="overlay" ' ; } ?> >
 <h1 class="visually-hidden">Дела в порядке</h1>
 
 <div class="page-wrapper">
@@ -108,6 +108,8 @@
         </div>
     </div>
 </footer>
+
+<?php require_once TEMPPATH.'/taskmod.php'; ?>
 
 <script src="flatpickr.js"></script>
 <script src="script.js"></script>

@@ -131,7 +131,8 @@ function get_tasks_by_user_id(int $id): array
               FROM tasks t
               JOIN projects p
               ON t.project_id = p.id
-              WHERE t.user_id = ?";
+              WHERE t.user_id = ?
+              ORDER BY t.id DESC";
 
     $stmt = db_get_prepare_stmt($con, $sql, [$id]);
 
@@ -168,6 +169,8 @@ function get_tasks_for_one_project(int $user_id, ?int $project_id): array
         array_push($values, $project_id);
     }
 
+    $sql = $sql . " ORDER BY id DESC";
+
     $stmt = db_get_prepare_stmt($con, $sql, $values);
 
     $tasks = db_get_result_stmt($stmt);
@@ -176,4 +179,84 @@ function get_tasks_for_one_project(int $user_id, ?int $project_id): array
 
     return $tasks;
 
+}
+
+/**
+ * Добавляет в БД задачу из полученных из формы данных
+ *
+ * @param int $user_id
+ * @return array
+ */
+function create_task_from_form (int $user_id): array
+{
+    $con = connect_to_db();
+
+    $state = $_POST;
+
+    $fname = $_POST['name'] ?? '';
+    $fproject = intval($_POST['project']) ?? '';
+    $fdate = $_POST['date'] ?? '';
+    $ffile = $_FILES['preview'] ?? [];
+
+    $required_fields = ['name', 'project'];
+
+    foreach ($required_fields as $field) {
+        if (empty($_POST[$field])) {
+            $state[$field . '_err'] = 'Необходимо заполнить';
+            $state['form_err'] = true;
+        }
+    }
+
+    $sql = "INSERT
+            into tasks
+            SET
+            created_at = CURRENT_TIMESTAMP,
+            name = ?,
+            user_id = ?,
+            project_id = ?";
+
+    $values = [$fname, $user_id, $fproject];
+
+    if (isset($ffile['size'], $ffile['error']) && $ffile['size'] !== 0 && $ffile['error'] === 0) {
+            $file_name = $_FILES['preview']['name'];
+            $file_url = '/uploads/' . $file_name;
+            $file_path = ABSPATH . $file_url;
+
+            move_uploaded_file($_FILES['preview']['tmp_name'], $file_path);
+
+            $sql = $sql . ", file = ?";
+
+            array_push($values, $file_url);
+        }
+
+    if ($fdate !== '') {
+        $parsed_date = date_parse_from_format('Y-m-d H:i', $fdate);
+
+        if ($parsed_date['error_count'] === 0) {
+            $sql = $sql . ", deadline = ?";
+            array_push($values, $fdate);
+        }
+        else {
+            $state['date_err'] = 'Некорректный формат даты';
+            $state['form_err'] = true;
+        }
+
+    }
+
+    if (isset($state['form_err'])) {
+        return $state;
+    }
+
+    $stmt = db_get_prepare_stmt($con, $sql, $values);
+    mysqli_stmt_execute($stmt);
+
+    if (mysqli_stmt_affected_rows($stmt) === 0) {
+        die("Ошибка добавления в БД.");
+    }
+
+    header('Location: /index.php');
+
+    mysqli_close($con);
+
+    return [];
 }
