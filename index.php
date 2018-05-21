@@ -9,14 +9,12 @@ $show_complete_tasks = rand(0, 1);
 
 $id = 4;
 
+$form_state = null;
 if (isset($_POST['form_type'])) {
     switch ($_POST['form_type'])
     {
         case 'add_task':
             $form_state = create_task_from_form($id);
-            break;
-        default:
-            $form_state = null;
             break;
     }
 }
