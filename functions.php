@@ -214,16 +214,18 @@ function create_task_from_form (int $user_id): array
 
     $values = [$fname, $user_id, $fproject];
 
-    if (isset($ffile)) {
-        $file_name = $_FILES['preview']['name'];
-        $file_url = '/uploads/' . $file_name;
-        $file_path = ABSPATH . $file_url;
+    if (isset($ffile['size']) && isset($ffile['error']) ) {
+        if ($ffile['size'] == 0 && $ffile['error'] == 0) {
+            $file_name = $_FILES['preview']['name'];
+            $file_url = '/uploads/' . $file_name;
+            $file_path = ABSPATH . $file_url;
 
-        move_uploaded_file($_FILES['preview']['tmp_name'], $file_path);
+            move_uploaded_file($_FILES['preview']['tmp_name'], $file_path);
 
-        $sql = $sql . ", file = ?";
+            $sql = $sql . ", file = ?";
 
-        array_push($values, $file_url);
+            array_push($values, $file_url);
+        }
     }
 
     if ($fdate !== '') {

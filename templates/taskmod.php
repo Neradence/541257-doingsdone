@@ -13,7 +13,7 @@
 
             <label class="form__label" for="name">Название <sup>*</sup></label>
 
-            <input class="form__input<?php if (isset($formstate['name_err'])) { echo " form__input--error" ; } ?>" type="text" name="name" id="name" value="<?php htmlspecialchars($formstate['name']); ?>" placeholder="Введите название">
+            <input class="form__input<?php if (isset($formstate['name_err'])) { echo " form__input--error" ; } ?>" type="text" name="name" id="name" value="<?php echo htmlspecialchars($formstate['name']); ?>" placeholder="Введите название">
         </div>
 
         <div class="form__row">
@@ -31,7 +31,7 @@
                                 $is_selected = ($category['id'] === intval($formstate['project'])) ? 'selected' : '';
                             }
                         ?>
-                        <option value="<?php if (isset($category['id']) && $category['name'] !== 'Все') { echo $category['id'] ; } ?>" <?php if (isset($is_selected)) { echo $is_selected; } ?>><?php htmlspecialchars($category['name']); ?></option>
+                        <option value="<?php if (isset($category['id']) && $category['name'] !== 'Все') { echo $category['id'] ; } ?>" <?php if (isset($is_selected)) { echo $is_selected; } ?>><?php echo htmlspecialchars($category['name']); ?></option>
                     <?php } ?>
                 <?php } ?>
             </select>
@@ -44,7 +44,7 @@
 
             <label class="form__label" for="date">Срок выполнения</label>
 
-            <input class="form__input form__input--date <?php if (isset($formstate['date_err'])) { echo " form__input--error" ; } ?>" type="text" name="date" id="date" value="<?php htmlspecialchars($formstate['date']); ?>"
+            <input class="form__input form__input--date <?php if (isset($formstate['date_err'])) { echo " form__input--error" ; } ?>" type="text" name="date" id="date" value="<?php echo htmlspecialchars($formstate['date']); ?>"
                    placeholder="Введите дату и время">
         </div>
 
