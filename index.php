@@ -15,7 +15,7 @@ if (isset($_POST['form_type'])) {
         case 'add_task':
             $form_state == create_task_from_form($id);
             break;
-        define:
+        default:
             $form_state == null;
             break;
     }
