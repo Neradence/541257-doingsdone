@@ -13,9 +13,11 @@ if (isset($_POST['form_type'])) {
     switch ($_POST['form_type'])
     {
         case 'add_task':
-            $form_state = create_task_from_form($id);
+            $form_state == create_task_from_form($id);
+            break;
         define:
-            $form_state = null;
+            $form_state == null;
+            break;
     }
 }
 
