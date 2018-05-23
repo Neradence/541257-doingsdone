@@ -260,3 +260,61 @@ function create_task_from_form (int $user_id): array
 
     return [];
 }
+
+function registration_new_user ()
+{
+    $con = connect_to_db();
+
+    $state = $_POST;
+
+    $email = $_POST['email'];
+    $password = $_POST['password'];
+    $name = $_POST['name'];
+
+    $required_fields = ['email', 'password', 'name'];
+
+    foreach ($required_fields as $field) {
+        if (empty($_POST[$field])) {
+            $state[$field . '_err'] = 'Пожалуйста, введите данные.';
+            $state['_err'] = true;
+        }
+    }
+
+    $sql_for_email = "SELECT id
+                      FROM users
+                      WHERE email = ?";
+
+    $values = [$email];
+    $stmt = db_get_prepare_stmt($con, $sql_for_email, $values);
+    $uniq_email = db_get_num_rows_stmt($stmt);
+
+    if ($uniq_email != 0) {
+        $state[email_err] = 'Пользователь с таким email уже существует';
+    }
+
+    if (false === filter_var($email, FILTER_VALIDATE_EMAIL)) {
+        $state[email_err] = 'Некорректный email';
+    }
+
+    if (isset($state['_err'])) {
+        return $state;
+    }
+
+    $sql = "INSERT
+            INTO users
+            SET 
+            created_at = CURRENT_TIMESTAMP, 
+            email = ?, 
+            name = ?, 
+            password = ?";
+
+    $hash_password = password_hash($password, PASSWORD_DEFAULT);
+
+    $values = [$email, $name, $hash_password];
+    $stmt = db_get_prepare_stmt($con, $sql, $values);
+    mysqli_stmt_execute($stmt);
+
+    mysqli_close($con);
+
+    return [];
+}

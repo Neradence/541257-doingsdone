@@ -65,3 +65,18 @@ function db_get_result_stmt($stmt): array
 
     return mysqli_fetch_all($result,MYSQLI_ASSOC);
 }
+
+function db_get_num_rows_stmt($stmt): int
+{
+    mysqli_stmt_execute($stmt);
+    $result = mysqli_stmt_get_result($stmt);
+
+    if (!$result) {
+        die("Ошибка MySQL " . mysqli_stmt_error($stmt)." в файле ".__FILE__." в строке № ".__LINE__);
+    }
+
+    $num = mysqli_stmt_num_rows($stmt);
+    mysqli_fetch_all($result,MYSQLI_ASSOC);
+
+    return $num;
+}
