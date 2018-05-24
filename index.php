@@ -7,7 +7,7 @@ require_once ABSPATH.'/functions.php';
 // показывать или нет выполненные задачи
 $show_complete_tasks = rand(0, 1);
 
-$page = $_GET['page'] ?? 'index';
+$page = $_GET['page'] ?? 'registration';
 
 $id = 4;
 

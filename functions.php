@@ -286,20 +286,18 @@ function registration_new_user (): array
         }
     }
 
-    if (false === filter_var($email, FILTER_VALIDATE_EMAIL) && empty(['email_err'])) {
+    if (empty($state['email_err']) && (false === filter_var($email, FILTER_VALIDATE_EMAIL))) {
         $state['email_err'] = 'Некорректный email';
         $state['_err'] = true;
-    }
-    else {
+    } else {
         $sql_for_email = "SELECT id
                       FROM users
                       WHERE email = ?";
 
-        $values = [$email];
-        $stmt = db_get_prepare_stmt($con, $sql_for_email, $values);
-        $uniq_email = db_get_num_rows_stmt($stmt);
+        $stmt = db_get_prepare_stmt($con, $sql_for_email, [$email]);
+        $is_email_unique = db_get_num_rows_stmt($stmt) === 0;
 
-        if ($uniq_email != 0) {
+        if (! $is_email_unique) {
             $state['email_err'] = 'Пользователь с таким email уже существует';
             $state['_err'] = true;
         }

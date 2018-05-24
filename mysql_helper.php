@@ -73,7 +73,7 @@ function db_get_result_stmt($stmt): array
  * @param $stmt
  * @return int
  */
-function db_get_num_rows_stmt($stmt): int
+function db_get_num_rows_stmt($stmt): bool
 {
     mysqli_stmt_execute($stmt);
     $result = mysqli_stmt_get_result($stmt);
@@ -85,5 +85,9 @@ function db_get_num_rows_stmt($stmt): int
     $num = mysqli_stmt_num_rows($stmt);
     mysqli_fetch_all($result,MYSQLI_ASSOC);
 
-    return $num;
+    if ($num === 0) {
+        return true;
+    } else {
+        return false;
+    }
 }
