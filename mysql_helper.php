@@ -66,6 +66,13 @@ function db_get_result_stmt($stmt): array
     return mysqli_fetch_all($result,MYSQLI_ASSOC);
 }
 
+/**
+ * Возвращает количество строк в подготовленном stmt запросе и забирает результат в виде ассоциативного массива,
+ * чтобы избежать ошибки commands out of sync
+ *
+ * @param $stmt
+ * @return int
+ */
 function db_get_num_rows_stmt($stmt): int
 {
     mysqli_stmt_execute($stmt);

@@ -261,7 +261,13 @@ function create_task_from_form (int $user_id): array
     return [];
 }
 
-function registration_new_user ()
+/**
+ * Регистрирует нового пользователя
+ * по данным из формы
+ *
+ * @return array
+ */
+function registration_new_user (): array
 {
     $con = connect_to_db();
 
@@ -280,21 +286,23 @@ function registration_new_user ()
         }
     }
 
-    $sql_for_email = "SELECT id
-                      FROM users
-                      WHERE email = ?";
-
-    $values = [$email];
-    $stmt = db_get_prepare_stmt($con, $sql_for_email, $values);
-    $uniq_email = db_get_num_rows_stmt($stmt);
-
-    if ($uniq_email != 0) {
-        $state[email_err] = 'Пользователь с таким email уже существует';
-    }
-
     if (false === filter_var($email, FILTER_VALIDATE_EMAIL)) {
         $state[email_err] = 'Некорректный email';
     }
+    else {
+        $sql_for_email = "SELECT id
+                      FROM users
+                      WHERE email = ?";
+
+        $values = [$email];
+        $stmt = db_get_prepare_stmt($con, $sql_for_email, $values);
+        $uniq_email = db_get_num_rows_stmt($stmt);
+
+        if ($uniq_email != 0) {
+            $state[email_err] = 'Пользователь с таким email уже существует';
+        }
+    }
+
 
     if (isset($state['_err'])) {
         return $state;

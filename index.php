@@ -17,7 +17,6 @@ if (isset($_POST['form_type'])) {
     {
         case 'add_user':
             $form_state = registration_new_user();
-            var_dump($form_state);
 
             if (!isset($form_state['_err'])) {
                 $page = 'index';
