@@ -286,8 +286,9 @@ function registration_new_user (): array
         }
     }
 
-    if (false === filter_var($email, FILTER_VALIDATE_EMAIL)) {
-        $state[email_err] = 'Некорректный email';
+    if (false === filter_var($email, FILTER_VALIDATE_EMAIL) && empty(['email_err'])) {
+        $state['email_err'] = 'Некорректный email';
+        $state['_err'] = true;
     }
     else {
         $sql_for_email = "SELECT id
@@ -299,7 +300,8 @@ function registration_new_user (): array
         $uniq_email = db_get_num_rows_stmt($stmt);
 
         if ($uniq_email != 0) {
-            $state[email_err] = 'Пользователь с таким email уже существует';
+            $state['email_err'] = 'Пользователь с таким email уже существует';
+            $state['_err'] = true;
         }
     }
 
