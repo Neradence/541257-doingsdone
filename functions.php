@@ -290,19 +290,18 @@ function registration_new_user (): array
         $state['email_err'] = 'Некорректный email';
         $state['_err'] = true;
     } else {
-        $sql_for_email = "SELECT id
+        $sql_for_email = "SELECT count(id)
                       FROM users
                       WHERE email = ?";
 
         $stmt = db_get_prepare_stmt($con, $sql_for_email, [$email]);
-        $is_email_unique = db_get_num_rows_stmt($stmt) === 0;
+        $is_email_unique = db_get_num_rows_stmt($stmt);
 
         if (! $is_email_unique) {
             $state['email_err'] = 'Пользователь с таким email уже существует';
             $state['_err'] = true;
         }
     }
-
 
     if (isset($state['_err'])) {
         return $state;

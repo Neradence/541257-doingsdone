@@ -82,10 +82,9 @@ function db_get_num_rows_stmt($stmt): bool
         die("Ошибка MySQL " . mysqli_stmt_error($stmt)." в файле ".__FILE__." в строке № ".__LINE__);
     }
 
-    $num = mysqli_stmt_num_rows($stmt);
-    mysqli_fetch_all($result,MYSQLI_ASSOC);
+    $count = mysqli_fetch_all($result,MYSQLI_ASSOC);
 
-    if ($num === 0) {
+    if ($count[0]['count(id)'] === 0) {
         return true;
     } else {
         return false;

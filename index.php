@@ -7,7 +7,15 @@ require_once ABSPATH.'/functions.php';
 // показывать или нет выполненные задачи
 $show_complete_tasks = rand(0, 1);
 
-$page = $_GET['page'] ?? 'registration';
+$page = $_GET['page'] ?? 'index';
+
+$user_id = $_GET['user_id'];
+//когда будет функция аутентификации, параметр появится
+if (! empty($user_id)) {
+    $page = 'index';
+} else {
+    $page = 'registration';
+}
 
 $id = 4;
 
