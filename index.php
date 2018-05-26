@@ -7,37 +7,15 @@ require_once ABSPATH.'/functions.php';
 // показывать или нет выполненные задачи
 $show_complete_tasks = rand(0, 1);
 
-$page = $_GET['page'] ?? 'index';
-
-$user_id = $_GET['user_id'];
-//когда будет функция аутентификации, параметр появится
-if (! empty($user_id)) {
+$user = false;
+//здесь будет функция аутентификации
+if (!($user)) {
     $page = 'index';
 } else {
     $page = 'registration';
 }
 
 $id = 4;
-
-$form_state = null;
-if (isset($_POST['form_type'])) {
-    switch ($_POST['form_type'])
-    {
-        case 'add_user':
-            $form_state = registration_new_user();
-
-            if (!isset($form_state['_err'])) {
-                $page = 'index';
-            }
-            else {
-                $page = 'registration';
-            }
-            break;
-        case 'add_task':
-            $form_state = create_task_from_form($id);
-            break;
-    }
-}
 
 $project_id = isset($_GET['proj']) ? intval($_GET['proj']) : null;
 $projects = get_tasks_for_one_project($id, $project_id);
@@ -46,9 +24,13 @@ if (0 === $project_id || 0 === count($projects)) {
     $page = '404';
 }
 
+$form_state = null;
 switch ($page)
 {
     case 'index':
+        if (isset($_POST['form_type']) && $_POST['form_type'] === 'add_task') {
+            $form_state = create_task_from_form($id);
+        }
         $page_content = render_content(TEMPPATH.'/index.php',
             [
                 'show_complete_tasks' => $show_complete_tasks,
@@ -67,6 +49,15 @@ switch ($page)
         break;
 
     case 'registration':
+        if (isset($_POST['form_type']) && $_POST['form_type'] === 'add_user') {
+            $form_state = registration_new_user();
+                if (!isset($form_state['_err'])) {
+                    $page = 'index';
+                }
+                else {
+                    $page = 'registration';
+                }
+        }
         $page_content = render_content(TEMPPATH.'/registration.php',
             [
                 'formstate' => $form_state
