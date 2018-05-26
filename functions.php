@@ -325,3 +325,4 @@ function registration_new_user (): array
 
     return [];
 }
+

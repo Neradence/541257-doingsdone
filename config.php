@@ -7,3 +7,5 @@ define('DB_HOST', "localhost");
 define('DB_USER', "root");
 define('DB_PASSWORD', "");
 define('DB_NAME', "doingsdone");
+
+define('SHOW_COMPLETE_TASKS', rand(0, 1));

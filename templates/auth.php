@@ -1,4 +1,4 @@
-<div class="modal" hidden id="user_login">
+<div class="modal" id="user_login">
     <button class="modal__close" type="button" name="button">Закрыть</button>
 
     <h2 class="modal__heading">Вход на сайт</h2>
