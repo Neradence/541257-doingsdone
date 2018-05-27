@@ -124,6 +124,7 @@ function get_tasks_by_user_id(int $id): array
     $con = connect_to_db();
 
     $sql = "SELECT
+              t.id as taskid,
               t.name,
               t.deadline as date,
               p.name as category,
@@ -151,11 +152,12 @@ function get_tasks_by_user_id(int $id): array
  * @param int|null $project_id
  * @return array
  */
-function get_tasks_for_one_project(int $user_id, ?int $project_id): array
+function get_tasks_for_one_project(int $user_id, ?int $project_id, $filter = null): array
 {
     $con = connect_to_db();
 
     $sql = "SELECT 
+              id as taskid,
               name,
               deadline as date,
               (done_at is not null) as done
@@ -167,6 +169,24 @@ function get_tasks_for_one_project(int $user_id, ?int $project_id): array
     if (!is_null($project_id)) {
         $sql = $sql . " AND project_id = ?";
         array_push($values, $project_id);
+    }
+
+    if (!empty($filter)) {
+        switch ($filter)
+        {
+            case 'now':
+                $sql = $sql . " AND date(deadline) = date(now())";
+                break;
+            case 'tomorrow':
+                $sql = $sql . " AND date(deadline) = date(now() + INTERVAL 1 DAY)";
+                break;
+            case 'ago':
+                $sql = $sql . " AND date(deadline) < date(now())";
+                break;
+            default:
+                not_found_control ();
+                exit();
+        }
     }
 
     $sql = $sql . " ORDER BY id DESC";
@@ -262,6 +282,82 @@ function create_task_from_form (int $user_id): array
 }
 
 /**
+ * Создаёт проект из формы и добавляет его в БД
+ *
+ * @param int $user_id
+ * @return array
+ */
+function create_project_from_form (int $user_id): array
+{
+    $con = connect_to_db();
+
+    $state = $_POST;
+
+    $project_name = $_POST['name'];
+
+    if (empty($project_name)) {
+        $state[$project_name . '_err'] = 'Необходимо заполнить';
+        $state['_err'] = true;
+    }
+
+
+    if (isset($state['_err'])) {
+        $state['form_err'] = 'Пожалуйста, заполните форму правильно.';
+        return $state;
+    }
+
+    $sql = "INSERT
+            INTO projects
+            SET 
+            name = ?, 
+            user_id = ?";
+
+    $values = [$project_name, $user_id];
+
+    $stmt = db_get_prepare_stmt($con, $sql, $values);
+    mysqli_stmt_execute($stmt);
+
+    if (mysqli_stmt_affected_rows($stmt) === 0) {
+        die("Ошибка добавления в БД.");
+    }
+
+    header('Location: /index.php');
+
+    mysqli_close($con);
+
+    return [];
+}
+
+/**
+ * Инвертирует статус задачи на выполнено/нет
+ * по клику чекбокса
+ *
+ * @param $task_id
+ * @param bool $check
+ * @return bool
+ */
+function invert_done_task ($task_id, $check = false): bool
+{
+    $con = connect_to_db();
+
+    if (empty($check)) {
+        $sql_done = "UPDATE tasks SET done_at = NULL WHERE id='" . $task_id . "'";
+    } else {
+        $sql_done = "UPDATE tasks SET done_at = CURRENT_TIMESTAMP WHERE id='" . $task_id . "'";
+    }
+
+    $result = mysqli_query($con, $sql_done);
+
+    if (!$result) {
+        die("Ошибка добавления в БД.");
+    }
+
+    mysqli_close($con);
+
+    return true;
+}
+
+/**
  * Регистрирует нового пользователя
  * по данным из формы
  *
@@ -304,6 +400,7 @@ function registration_new_user (): array
     }
 
     if (isset($state['_err'])) {
+        $state['form_err'] = 'Пожалуйста, заполните форму правильно.';
         return $state;
     }
 
@@ -326,3 +423,57 @@ function registration_new_user (): array
     return [];
 }
 
+/**
+ * Аутентификация пользователя, возвращает
+ * или массив ошибок, или массив данных пользователя из БД,
+ * в случае успешной аутентификации устанавливает
+ * в переменные сессии user данные пользователя
+ *
+ * @return array
+ */
+function auth_user () : array
+{
+    $con = connect_to_db();
+
+    $state = $_POST;
+
+    $required_fields = ['email', 'password'];
+
+    foreach ($required_fields as $field) {
+        if (empty($_POST[$field])) {
+            $state[$field . '_err'] = 'Пожалуйста, введите данные.';
+            $state['_err'] = true;
+        }
+    }
+
+    $email = mysqli_real_escape_string($con, $_POST['email']);
+    $password = $_POST['password'];
+
+    $sql = "SELECT * FROM users WHERE email = '" . $email . "'";
+    $result = mysqli_query($con, $sql);
+
+    $user = $result ? mysqli_fetch_array($result, MYSQLI_ASSOC) : null;
+    if (!isset($state['_err']) && !empty($user)) {
+        if (password_verify($password, $user['password'])) {
+            $_SESSION['user'] = $user;
+            $_SESSION['user']['id'] = intval($_SESSION['user']['id']);
+        }
+        else {
+            $state['password_err'] = 'Неверный пароль';
+            $state['_err'] = true;
+        }
+    }
+    else {
+        $state['email_err'] = 'Такой пользователь не найден';
+        $state['_err'] = true;
+    }
+
+    if (isset($state['_err'])) {
+        $state['form_err'] = 'Пожалуйста, заполните форму правильно.';
+        return ['successful' => false, 'state' => $state];
+    }
+
+    mysqli_close($con);
+
+    return ['successful' => true, 'user' => $user];
+}

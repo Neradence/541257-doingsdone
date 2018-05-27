@@ -31,7 +31,7 @@
                     <div class="user-menu__data">
                         <p><?= htmlspecialchars($user_name); ?></p>
 
-                        <a href="#">Выйти</a>
+                        <a href="/index.php?page=logout">Выйти</a>
                     </div>
                 </div>
             </div>
@@ -110,6 +110,7 @@
 </footer>
 
 <?php require_once TEMPPATH.'/taskmod.php'; ?>
+<?php require_once TEMPPATH.'/projectmod.php'; ?>
 
 <script src="flatpickr.js"></script>
 <script src="script.js"></script>
