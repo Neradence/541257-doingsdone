@@ -65,3 +65,28 @@ function db_get_result_stmt($stmt): array
 
     return mysqli_fetch_all($result,MYSQLI_ASSOC);
 }
+
+/**
+ * Возвращает количество строк в подготовленном stmt запросе и забирает результат в виде ассоциативного массива,
+ * чтобы избежать ошибки commands out of sync
+ *
+ * @param $stmt
+ * @return int
+ */
+function db_get_num_rows_stmt($stmt): bool
+{
+    mysqli_stmt_execute($stmt);
+    $result = mysqli_stmt_get_result($stmt);
+
+    if (!$result) {
+        die("Ошибка MySQL " . mysqli_stmt_error($stmt)." в файле ".__FILE__." в строке № ".__LINE__);
+    }
+
+    $count = mysqli_fetch_all($result,MYSQLI_ASSOC);
+
+    if ($count[0]['count(id)'] === 0) {
+        return true;
+    } else {
+        return false;
+    }
+}
