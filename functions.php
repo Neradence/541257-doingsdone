@@ -304,6 +304,7 @@ function registration_new_user (): array
     }
 
     if (isset($state['_err'])) {
+        $state['form_err'] = 'Пожалуйста, заполните форму правильно.';
         return $state;
     }
 
@@ -326,3 +327,57 @@ function registration_new_user (): array
     return [];
 }
 
+/**
+ * Аутентификация пользователя, возвращает
+ * или массив ошибок, или массив данных пользователя из БД,
+ * в случае успешной аутентификации устанавливает
+ * в переменные сессии user данные пользователя
+ *
+ * @return array
+ */
+function auth_user () : array
+{
+    $con = connect_to_db();
+
+    $state = $_POST;
+
+    $required_fields = ['email', 'password'];
+
+    foreach ($required_fields as $field) {
+        if (empty($_POST[$field])) {
+            $state[$field . '_err'] = 'Пожалуйста, введите данные.';
+            $state['_err'] = true;
+        }
+    }
+
+    $email = mysqli_real_escape_string($con, $_POST['email']);
+    $password = $_POST['password'];
+
+    $sql = "SELECT * FROM users WHERE email = '" . $email . "'";
+    $result = mysqli_query($con, $sql);
+
+    $user = $result ? mysqli_fetch_array($result, MYSQLI_ASSOC) : null;
+    if (!isset($state['_err']) && !empty($user)) {
+        if (password_verify($password, $user['password'])) {
+            $_SESSION['user'] = $user;
+            $_SESSION['user']['id'] = intval($_SESSION['user']['id']);
+        }
+        else {
+            $state['password_err'] = 'Неверный пароль';
+            $state['_err'] = true;
+        }
+    }
+    else {
+        $state['email_err'] = 'Такой пользователь не найден';
+        $state['_err'] = true;
+    }
+
+    if (isset($state['_err'])) {
+        $state['form_err'] = 'Пожалуйста, заполните форму правильно.';
+        return ['successful' => false, 'state' => $state];
+    }
+
+    mysqli_close($con);
+
+    return ['successful' => true, 'user' => $user];
+}
