@@ -80,7 +80,7 @@ function auth_control () : array
  */
 function index_control ()
 {
-    if (isset($_SESSION['user']['id'], $_SESSION['user']['name'])) {
+    if (isset($_SESSION['user']['id'])) {
     $id = $_SESSION['user']['id'];
     $username = $_SESSION['user']['name'];
 }
@@ -91,7 +91,7 @@ function index_control ()
     $project_id = isset($_GET['proj']) ? intval($_GET['proj']) : null;
     $projects = get_tasks_for_one_project($id, $project_id);
     if (0 === $project_id || 0 === count($projects)) {
-        not_found_control ($id);
+        not_found_control ();
         return;
     }
     $page_content = render_content(TEMPPATH.'/index.php',
@@ -121,7 +121,7 @@ function not_found_control ()
     http_response_code(404);
     $page_content = render_content(TEMPPATH.'/404.php');
 
-    if (isset($_SESSION['user'], $_SESSION['user']['id'], $_SESSION['user']['name'])) {
+    if (isset($_SESSION['user'])) {
         $id = $_SESSION['user']['id'];
         $username = $_SESSION['user']['name'];
         $layout_content = render_content(TEMPPATH . '/layout.php',
@@ -164,7 +164,7 @@ function notrules_control ()
 
     $page_content = render_content(TEMPPATH.'/401.php');
 
-    if (isset($_SESSION['user'], $_SESSION['user']['id'], $_SESSION['user']['name'])) {
+    if (isset($_SESSION['user'])) {
         $id = $_SESSION['user']['id'];
         $username = $_SESSION['user']['name'];
         $layout_content = render_content(TEMPPATH . '/layout.php',

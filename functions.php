@@ -194,7 +194,7 @@ function create_task_from_form (int $user_id): array
     $state = $_POST;
 
     $fname = $_POST['name'] ?? '';
-    $fproject = intval($_POST['project']) ?? '';
+    $fproject = isset($_POST['project']) ? intval($_POST['project']) : 0;
     $fdate = $_POST['date'] ?? '';
     $ffile = $_FILES['preview'] ?? [];
 
@@ -350,7 +350,7 @@ function auth_user () : array
         }
     }
 
-    if($state['_err']) {
+    if(isset($state['_err'])) {
         return ['successful' => false, 'state' => $state];
     }
 
@@ -372,7 +372,7 @@ function auth_user () : array
     if (!empty($user)) {
         if (password_verify($password, $user['password'])) {
             $_SESSION['user'] = $user;
-            $_SESSION['user']['id'] = intval($_SESSION['user']['id']);
+            $_SESSION['user']['id'] = isset($_SESSION['user']['id']) ? intval($_SESSION['user']['id']) : 0;
         }
         else {
             $state['password_err'] = 'Неверный пароль';
