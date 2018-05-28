@@ -80,7 +80,11 @@ function auth_control () : array
  */
 function index_control ()
 {
+
+    if (isset($_SESSION['user']['id'])) {
     $id = $_SESSION['user']['id'];
+    $username = $_SESSION['user']['name'];
+    }
 
     if (isset($_GET['task_id'], $_GET['check'])) {
         invert_done_task($_GET['task_id'], $_GET['check']);
@@ -119,7 +123,7 @@ function index_control ()
             'do_list' => get_tasks_by_user_id($id),
             'categories' => get_projects_by_user_id($id),
             'title' => 'Дела в порядке - Главная',
-            'user_name' => $_SESSION['user']['name'],
+            'user_name' => $username,
             'formstate_task' => $form_state_task ?? [],
             'formstate_project' => $form_state_project ?? []
         ]);
@@ -137,13 +141,14 @@ function not_found_control ()
 
     if (isset($_SESSION['user'])) {
         $id = $_SESSION['user']['id'];
+        $username = $_SESSION['user']['name'];
         $layout_content = render_content(TEMPPATH . '/layout.php',
             [
                 'content' => $page_content,
                 'do_list' => get_tasks_by_user_id($id),
                 'categories' => get_projects_by_user_id($id),
                 'title' => 'Дела в порядке - 404',
-                'user_name' => $_SESSION['user']['name']
+                'user_name' => $username
             ]);
     } else {
         $layout_content = render_content(TEMPPATH.'/guest-layout.php',
@@ -179,13 +184,16 @@ function notrules_control ()
 
     if (isset($_SESSION['user'])) {
         $id = $_SESSION['user']['id'];
+        $username = $_SESSION['user']['name'];
+
         $layout_content = render_content(TEMPPATH . '/layout.php',
             [
                 'content' => $page_content,
                 'do_list' => get_tasks_by_user_id($id),
                 'categories' => get_projects_by_user_id($id),
                 'title' => 'Дела в порядке - 401',
-                'user_name' => $_SESSION['user']['name']
+                'user_name' => $username
+
             ]);
     } else {
         $layout_content = render_content(TEMPPATH.'/guest-layout.php',

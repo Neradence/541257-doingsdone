@@ -214,7 +214,7 @@ function create_task_from_form (int $user_id): array
     $state = $_POST;
 
     $fname = $_POST['name'] ?? '';
-    $fproject = intval($_POST['project']) ?? '';
+    $fproject = isset($_POST['project']) ? intval($_POST['project']) : 0;
     $fdate = $_POST['date'] ?? '';
     $ffile = $_FILES['preview'] ?? [];
 
@@ -446,17 +446,29 @@ function auth_user () : array
         }
     }
 
-    $email = mysqli_real_escape_string($con, $_POST['email']);
-    $password = $_POST['password'];
+    if(isset($state['_err'])) {
+        return ['successful' => false, 'state' => $state];
+    }
+
+    if (isset($_POST['email'], $_POST['password'])) {
+        $email = mysqli_real_escape_string($con, $_POST['email']);
+        $password = $_POST['password'];
+    }
+
+    if (!filter_var($email, FILTER_VALIDATE_EMAIL)) {
+        $state['email_err'] = 'Пожалуйста, введите корректный email.';
+        $state['_err'] = true;
+        return ['successful' => false, 'state' => $state];
+    }
 
     $sql = "SELECT * FROM users WHERE email = '" . $email . "'";
     $result = mysqli_query($con, $sql);
 
     $user = $result ? mysqli_fetch_array($result, MYSQLI_ASSOC) : null;
-    if (!isset($state['_err']) && !empty($user)) {
+    if (!empty($user)) {
         if (password_verify($password, $user['password'])) {
             $_SESSION['user'] = $user;
-            $_SESSION['user']['id'] = intval($_SESSION['user']['id']);
+            $_SESSION['user']['id'] = isset($_SESSION['user']['id']) ? intval($_SESSION['user']['id']) : 0;
         }
         else {
             $state['password_err'] = 'Неверный пароль';
