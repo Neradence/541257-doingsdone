@@ -14,7 +14,7 @@
     if (isset($background)) {
         $body_class = $body_class . ' body-background';
     }
-    if (isset($formstate['form_err'])) {
+    if (isset($auth_form_state['_err'])) {
         $body_class = $body_class . ' overlay';
     }
 ?>

@@ -80,25 +80,42 @@ function auth_control () : array
  */
 function index_control ()
 {
+
     if (isset($_SESSION['user']['id'])) {
-    $id = $_SESSION['user']['id'];
-    $username = $_SESSION['user']['name'];
-}
+        $id = $_SESSION['user']['id'];
+        $username = $_SESSION['user']['name'];
+    }
+
+    if (isset($_GET['task_id'], $_GET['check'])) {
+        invert_done_task($_GET['task_id'], $_GET['check']);
+    }
+
+    if (isset($_GET['taskfilter'])) {
+        $filter = $_GET['taskfilter'];
+    }
 
     if (isset($_POST['form_type']) && $_POST['form_type'] === 'add_task') {
-        $form_state = create_task_from_form($id);
+        $form_state_task = create_task_from_form($id);
     }
+
+    if (isset($_POST['form_type']) && $_POST['form_type'] === 'add_project') {
+        $form_state_project = create_project_from_form($id);
+    }
+
     $project_id = isset($_GET['proj']) ? intval($_GET['proj']) : null;
     $projects = get_tasks_for_one_project($id, $project_id);
     if (0 === $project_id || 0 === count($projects)) {
         not_found_control ();
         return;
     }
+    $projects = get_tasks_for_one_project($id, $project_id, $filter);
+
     $page_content = render_content(TEMPPATH.'/index.php',
         [
             'show_complete_tasks' => SHOW_COMPLETE_TASKS,
             'do_list' => $projects,
-            'id' => $id
+            'id' => $id,
+            'filter' => $filter
         ]);
     $layout_content = render_content(TEMPPATH.'/layout.php',
         [
@@ -107,7 +124,8 @@ function index_control ()
             'categories' => get_projects_by_user_id($id),
             'title' => 'Дела в порядке - Главная',
             'user_name' => $username,
-            'formstate' => $form_state
+            'formstate_task' => $form_state_task ?? [],
+            'formstate_project' => $form_state_project ?? []
         ]);
 
     print($layout_content);
@@ -167,6 +185,7 @@ function notrules_control ()
     if (isset($_SESSION['user'])) {
         $id = $_SESSION['user']['id'];
         $username = $_SESSION['user']['name'];
+
         $layout_content = render_content(TEMPPATH . '/layout.php',
             [
                 'content' => $page_content,
@@ -174,6 +193,7 @@ function notrules_control ()
                 'categories' => get_projects_by_user_id($id),
                 'title' => 'Дела в порядке - 401',
                 'user_name' => $username
+
             ]);
     } else {
         $layout_content = render_content(TEMPPATH.'/guest-layout.php',
