@@ -1,0 +1,1 @@
+<h2 class="content__main-heading">Ошибка 401: недостаточно прав.</h2>

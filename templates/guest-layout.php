@@ -8,22 +8,40 @@
     <link rel="stylesheet" href="../css/style.css">
 </head>
 
-<body><!--class="overlay"-->
+<?php
+    $body_class = '';
+
+    if (isset($background)) {
+        $body_class = $body_class . ' body-background';
+    }
+    if (isset($formstate['form_err'])) {
+        $body_class = $body_class . ' overlay';
+    }
+?>
+
+<body class="<?= $body_class; ?>">
 <h1 class="visually-hidden">Дела в порядке</h1>
 
 <div class="page-wrapper">
-    <div class="container container--with-sidebar">
+    <div class="container <?php if (!isset($background)) { echo 'container--with-sidebar'; } ?>">
         <header class="main-header">
             <a href="#">
                 <img src="../img/logo.png" width="153" height="42" alt="Логитип Дела в порядке">
             </a>
+
+            <div class="main-header__side">
+                <a class="main-header__side-item button button--transparent open-modal"  href="javascript:;"
+                   target="user_login">Войти</a>
+            </div>
         </header>
+
 
         <div class="content">
             <?= $content; ?>
         </div>
     </div>
 </div>
+
 
 <footer class="main-footer">
     <div class="container">
@@ -63,5 +81,10 @@
         </div>
     </div>
 </footer>
+
+<?php require_once TEMPPATH.'/auth.php'; ?>
+
+<script src="flatpickr.js"></script>
+<script src="script.js"></script>
 </body>
 </html>
