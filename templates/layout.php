@@ -9,7 +9,7 @@
     <link rel="stylesheet" href="css/flatpickr.min.css">
 </head>
 
-<body <?php if (isset($formstate['form_err'])) { echo ' class="overlay" ' ; } ?> >
+<body <?php if (isset($formstate_task['form_err']) || (isset($formstate_project['form_err']))) { echo ' class="overlay" ' ; } ?> >
 <h1 class="visually-hidden">Дела в порядке</h1>
 
 <div class="page-wrapper">

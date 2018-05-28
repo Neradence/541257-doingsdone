@@ -296,13 +296,8 @@ function create_project_from_form (int $user_id): array
     $project_name = $_POST['name'];
 
     if (empty($project_name)) {
-        $state[$project_name . '_err'] = 'Необходимо заполнить';
         $state['_err'] = true;
-    }
-
-
-    if (isset($state['_err'])) {
-        $state['form_err'] = 'Пожалуйста, заполните форму правильно.';
+        $state['form_err'] = 'Пожалуйста, укажите имя проекта.';
         return $state;
     }
 

@@ -82,8 +82,8 @@ function index_control ()
 {
 
     if (isset($_SESSION['user']['id'])) {
-    $id = $_SESSION['user']['id'];
-    $username = $_SESSION['user']['name'];
+        $id = $_SESSION['user']['id'];
+        $username = $_SESSION['user']['name'];
     }
 
     if (isset($_GET['task_id'], $_GET['check'])) {
