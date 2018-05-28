@@ -91,7 +91,7 @@ function index_control ()
     }
 
     if (isset($_GET['taskfilter'])) {
-        $filter = $_GET['taskfilter'];
+        $filter = $_GET['taskfilter'] ?? '';
     }
 
     if (isset($_POST['form_type']) && $_POST['form_type'] === 'add_task') {
@@ -109,10 +109,11 @@ function index_control ()
         return;
     }
     $projects = get_tasks_for_one_project($id, $project_id, $filter);
+    $show_complete_tasks = isset($_GET['show_completed']) ? intval($_GET['show_completed']) : 0;
 
     $page_content = render_content(TEMPPATH.'/index.php',
         [
-            'show_complete_tasks' => SHOW_COMPLETE_TASKS,
+            'show_complete_tasks' => $show_complete_tasks,
             'do_list' => $projects,
             'id' => $id,
             'filter' => $filter
