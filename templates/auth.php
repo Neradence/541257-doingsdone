@@ -1,4 +1,4 @@
-<div class="modal" <?php if (!isset($formstate['_err']) || (isset($formstate['show']) && $formstate['show'])) { echo ' hidden ' ; } ?>  id="user_login">
+<div class="modal" <?php if (!isset($formstate['_err']) || (isset($formstate['show']) && !$formstate['show'])) { echo ' hidden ' ; } ?>  id="user_login">
     <button class="modal__close" type="button" name="button">Закрыть</button>
 
     <h2 class="modal__heading">Вход на сайт</h2>

@@ -80,7 +80,10 @@ function auth_control () : array
  */
 function index_control ()
 {
+    if (isset($_SESSION['user']['id'], $_SESSION['user']['name'])) {
     $id = $_SESSION['user']['id'];
+    $username = $_SESSION['user']['name'];
+}
 
     if (isset($_POST['form_type']) && $_POST['form_type'] === 'add_task') {
         $form_state = create_task_from_form($id);
@@ -103,7 +106,7 @@ function index_control ()
             'do_list' => get_tasks_by_user_id($id),
             'categories' => get_projects_by_user_id($id),
             'title' => 'Дела в порядке - Главная',
-            'user_name' => $_SESSION['user']['name'],
+            'user_name' => $username,
             'formstate' => $form_state
         ]);
 
@@ -118,15 +121,16 @@ function not_found_control ()
     http_response_code(404);
     $page_content = render_content(TEMPPATH.'/404.php');
 
-    if (isset($_SESSION['user'])) {
+    if (isset($_SESSION['user'], $_SESSION['user']['id'], $_SESSION['user']['name'])) {
         $id = $_SESSION['user']['id'];
+        $username = $_SESSION['user']['name'];
         $layout_content = render_content(TEMPPATH . '/layout.php',
             [
                 'content' => $page_content,
                 'do_list' => get_tasks_by_user_id($id),
                 'categories' => get_projects_by_user_id($id),
                 'title' => 'Дела в порядке - 404',
-                'user_name' => $_SESSION['user']['name']
+                'user_name' => $username
             ]);
     } else {
         $layout_content = render_content(TEMPPATH.'/guest-layout.php',
@@ -160,15 +164,16 @@ function notrules_control ()
 
     $page_content = render_content(TEMPPATH.'/401.php');
 
-    if (isset($_SESSION['user'])) {
+    if (isset($_SESSION['user'], $_SESSION['user']['id'], $_SESSION['user']['name'])) {
         $id = $_SESSION['user']['id'];
+        $username = $_SESSION['user']['name'];
         $layout_content = render_content(TEMPPATH . '/layout.php',
             [
                 'content' => $page_content,
                 'do_list' => get_tasks_by_user_id($id),
                 'categories' => get_projects_by_user_id($id),
                 'title' => 'Дела в порядке - 401',
-                'user_name' => $_SESSION['user']['name']
+                'user_name' => $username
             ]);
     } else {
         $layout_content = render_content(TEMPPATH.'/guest-layout.php',

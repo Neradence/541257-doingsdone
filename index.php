@@ -11,8 +11,8 @@ $page = $_GET['page'] ?? '';
 
 if (empty($page) && empty($_SESSION['user']['id'])) {
     $page = 'guest-index';
-} else if (empty($page)) {
-    $page = 'index';
+} else if (empty($page) && isset($_SESSION['user'])) {
+        $page = 'index';
 }
 
 $form_state = null;
@@ -23,7 +23,7 @@ switch ($page)
         break;
 
     case 'index':
-        if (!isset($_SESSION['user'])) {
+        if (!isset($_SESSION['user']['id'])) {
             notrules_control();
             exit;
         }
