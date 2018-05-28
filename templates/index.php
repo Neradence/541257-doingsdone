@@ -8,10 +8,10 @@
 
 <div class="tasks-controls">
     <nav class="tasks-switch">
-        <a href="/" class="tasks-switch__item tasks-switch__item--active">Все задачи</a>
-        <a href="/" class="tasks-switch__item">Повестка дня</a>
-        <a href="/" class="tasks-switch__item">Завтра</a>
-        <a href="/" class="tasks-switch__item">Просроченные</a>
+        <a href="/" class="tasks-switch__item <?php if (empty($filter)) { echo 'tasks-switch__item--active'; } ?>">Все задачи</a>
+        <a href="/index.php?taskfilter=now" class="tasks-switch__item <?php if (!empty($filter) && ($filter === 'now')) { echo 'tasks-switch__item--active'; } ?>">Повестка дня</a>
+        <a href="/index.php?taskfilter=tomorrow" class="tasks-switch__item <?php if (!empty($filter) && ($filter === 'tomorrow')) { echo 'tasks-switch__item--active'; } ?>">Завтра</a>
+        <a href="/index.php?taskfilter=ago" class="tasks-switch__item <?php if (!empty($filter) && ($filter === 'ago')) { echo 'tasks-switch__item--active'; } ?>">Просроченные</a>
     </nav>
 
     <label class="checkbox">
@@ -34,7 +34,7 @@
                     <td class="task__select">
                         <label class="checkbox task__checkbox">
                             <?php if (isset($key['name'], $key['done'])): ?>
-                                <input class="checkbox__input visually-hidden" type="checkbox"<?= $key['done'] ? " checked" : ""; ?>>
+                                <input class="checkbox__input visually-hidden task__checkbox" type="checkbox"<?= $key['done'] ? " checked" : ""; ?> value="<?= $key['taskid']; ?>">
                                 <span class="checkbox__text"><?= isset($key['name']) ? htmlspecialchars($key['name']): ""; ?></span>
                             <?php endif; ?>
                         </label>
