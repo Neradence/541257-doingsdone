@@ -15,7 +15,7 @@
 <div class="page-wrapper">
     <div class="container container--with-sidebar">
         <header class="main-header">
-            <a href="#">
+            <a href="/">
                 <img src="img/logo.png" width="153" height="42" alt="Логотип Дела в порядке">
             </a>
 
@@ -47,8 +47,8 @@
                         <?php if (isset($categories) && is_array($categories)) : ?>
                             <?php foreach ($categories as $key) { ?>
                                 <?php if (isset($key['name'])): ?>
-                                    <li class="main-navigation__list-item<?php echo ('Все' === $key['name']) ? " main-navigation__list-item--active" : ""; ?>">
-                                        <a class="main-navigation__list-item-link" href="index.php<?php if (isset($key['id'])) { echo "?proj=" . intval($key['id']); } ;?>"><?= htmlspecialchars($key['name']); ?></a>
+                                    <li class="main-navigation__list-item<?php echo ($active_proj === $key['id']) ? " main-navigation__list-item--active" : ""; ?>">
+                                        <a class="main-navigation__list-item-link" href="index.php<?php if (isset($key['id']) && $key['id'] !== 0) { echo "?proj=" . intval($key['id']); } ;?>"><?= htmlspecialchars($key['name']); ?></a>
                                         <span class="main-navigation__list-item-count"><?= projects_count($do_list, $key['name']); ?></span>
                                     </li>
                                 <?php endif; ?>

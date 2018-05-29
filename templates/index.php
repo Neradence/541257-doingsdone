@@ -39,6 +39,16 @@
                             <?php endif; ?>
                         </label>
                     </td>
+                    <td class="task__file">
+                        <?php
+                            if (!empty($key['user_file'])) {
+                                $path_elems = mb_split('/', htmlspecialchars($key['user_file']));
+                                $full_filename = array_pop($path_elems);
+                                $path_elems = mb_split('-', $full_filename, 3);
+                        ?>
+                            <a class="download-link" href="<?= $key['user_file']; ?>"><?= array_pop($path_elems);?></a>
+                        <?php } ?>
+                    </td>
                         <td class="task__date"><?= isset($key['date']) ? htmlspecialchars($key['date']): ""; ?></td>
                     <td class="task__controls"></td>
                 </tr>

@@ -16,7 +16,7 @@ function guest_control ()
         'background' => true,
         'title' => 'Дела в порядке - Welcome!',
         'content' => $page_content,
-        'formstate' => auth_control()
+        'auth_form_state' => auth_control()
     ]);
 
     print ($layout_content);
@@ -43,9 +43,10 @@ function registration_control ()
         ]);
     $layout_content = render_content(TEMPPATH.'/guest-layout.php',
         [
+            'background' => false,
             'content' => $page_content,
             'title' => 'Дела в порядке - Регистрация',
-            'formstate' => $auth_form_state
+            'auth_form_state' => $auth_form_state
         ]);
 
     print($layout_content);
@@ -80,8 +81,7 @@ function auth_control () : array
  */
 function index_control ()
 {
-
-    if (isset($_SESSION['user']['id'])) {
+    if (isset($_SESSION['user']['id'], $_SESSION['user']['name'])) {
         $id = $_SESSION['user']['id'];
         $username = $_SESSION['user']['name'];
     }
@@ -90,8 +90,9 @@ function index_control ()
         invert_done_task($_GET['task_id'], $_GET['check']);
     }
 
+    $filter = '';
     if (isset($_GET['taskfilter'])) {
-        $filter = $_GET['taskfilter'] ?? '';
+        $filter = $_GET['taskfilter'];
     }
 
     if (isset($_POST['form_type']) && $_POST['form_type'] === 'add_task') {
@@ -103,18 +104,18 @@ function index_control ()
     }
 
     $project_id = isset($_GET['proj']) ? intval($_GET['proj']) : null;
-    $projects = get_tasks_for_one_project($id, $project_id);
-    if (0 === $project_id || 0 === count($projects)) {
+    $rigths_for_project = $project_id === null || check_right_user_project($id, $project_id);
+    if (!$rigths_for_project) {
         not_found_control ();
         return;
     }
-    $projects = get_tasks_for_one_project($id, $project_id, $filter);
+    $tasks = get_tasks_for_one_project($id, $project_id, $filter);
     $show_complete_tasks = isset($_GET['show_completed']) ? intval($_GET['show_completed']) : 0;
 
     $page_content = render_content(TEMPPATH.'/index.php',
         [
             'show_complete_tasks' => $show_complete_tasks,
-            'do_list' => $projects,
+            'do_list' => $tasks,
             'id' => $id,
             'filter' => $filter
         ]);
@@ -126,7 +127,8 @@ function index_control ()
             'title' => 'Дела в порядке - Главная',
             'user_name' => $username,
             'formstate_task' => $form_state_task ?? [],
-            'formstate_project' => $form_state_project ?? []
+            'formstate_project' => $form_state_project ?? [],
+            'active_proj' => $project_id ?? 0
         ]);
 
     print($layout_content);

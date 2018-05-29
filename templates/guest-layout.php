@@ -9,12 +9,14 @@
 </head>
 
 <?php
+    $hidden_auth = !isset($auth_form_state['_err']) && !(isset($auth_form_state['show']) && $auth_form_state['show']);
+
     $body_class = '';
 
-    if (isset($background)) {
-        $body_class = $body_class . ' body-background';
+    if (isset($background) && $background) {
+        $body_class = $body_class . 'body-background';
     }
-    if (isset($auth_form_state['_err'])) {
+    if (!$hidden_auth) {
         $body_class = $body_class . ' overlay';
     }
 ?>
@@ -25,7 +27,7 @@
 <div class="page-wrapper">
     <div class="container <?php if (!isset($background)) { echo 'container--with-sidebar'; } ?>">
         <header class="main-header">
-            <a href="#">
+            <a href="/">
                 <img src="../img/logo.png" width="153" height="42" alt="Логитип Дела в порядке">
             </a>
 

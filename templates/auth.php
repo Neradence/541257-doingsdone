@@ -1,4 +1,4 @@
-<div class="modal" <?php if (!isset($formstate['_err']) || (isset($formstate['show']) && !$formstate['show'])) { echo ' hidden ' ; } ?>  id="user_login">
+<div class="modal" <?php if ($hidden_auth) { echo ' hidden ' ; } ?>  id="user_login">
     <button class="modal__close" type="button" name="button">Закрыть</button>
 
     <h2 class="modal__heading">Вход на сайт</h2>
@@ -9,26 +9,26 @@
             <input type="hidden" value="login_user" name="form_type" />
 
             <label class="form__label" for="email">E-mail <sup>*</sup></label>
-            <input class="form__input<?php if (isset($formstate['email_err'])) { echo " form__input--error" ; } ?>" type="text" name="email" id="auth_email" value="<?php if (isset($formstate['email'])) { echo htmlspecialchars($formstate['email']); } ?>" placeholder="Введите e-mail">
+            <input class="form__input<?php if (isset($auth_form_state['email_err'])) { echo " form__input--error" ; } ?>" type="text" name="email" id="auth_email" value="<?php if (isset($auth_form_state['email'])) { echo htmlspecialchars($auth_form_state['email']); } ?>" placeholder="Введите e-mail">
 
-            <?php if (isset($formstate['email_err'])) { ?>
-                <p class="form__message"><?=$formstate['email_err'];?></p>
+            <?php if (isset($auth_form_state['email_err'])) { ?>
+                <p class="form__message"><?=$auth_form_state['email_err'];?></p>
             <?php } ?>
         </div>
 
         <div class="form__row">
             <label class="form__label" for="password">Пароль <sup>*</sup></label>
-            <input class="form__input<?php if (isset($formstate['password_err'])) { echo " form__input--error" ; } ?>" type="password" name="password" id="auth_password" value="" placeholder="Введите пароль">
+            <input class="form__input<?php if (isset($auth_form_state['password_err'])) { echo " form__input--error" ; } ?>" type="password" name="password" id="auth_password" value="" placeholder="Введите пароль">
 
-            <?php if (isset($formstate['password_err'])) { ?>
-                <p class="form__message"><?=$formstate['password_err'];?></p>
+            <?php if (isset($auth_form_state['password_err'])) { ?>
+                <p class="form__message"><?=$auth_form_state['password_err'];?></p>
             <?php } ?>
         </div>
 
         <div class="form__row form__row--controls">
 
-            <?php if (isset($formstate['form_err'])) { ?>
-                <p class="error-message"><?=$formstate['form_err'];?></p>
+            <?php if (isset($auth_form_state['form_err'])) { ?>
+                <p class="error-message"><?=$auth_form_state['form_err'];?></p>
             <?php } ?>
 
             <input class="button" type="submit" name="" value="Войти">

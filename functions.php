@@ -105,12 +105,36 @@ function get_projects_by_user_id(int $id): array
     $projects = db_get_result_stmt($stmt);
 
     //добавляет в начало список Все, который нужен для перечня категорий
-    array_unshift($projects, ["name" => 'Все']);
+    array_unshift($projects, ["name" => 'Все', 'id' => 0]);
 
     mysqli_close($con);
 
     return $projects;
 
+}
+
+/**
+ * Определяет, есть ли у пользователя права
+ * на запрошенный проект
+ *
+ * @param int $user_id
+ * @param int $project_id
+ * @return bool
+ */
+function check_right_user_project (int $user_id, int $project_id): bool
+{
+    $con = connect_to_db();
+
+    $sql = "SELECT COUNT(*) as count FROM projects WHERE user_id = ? AND id = ?";
+
+    $values = [$user_id, $project_id];
+
+    $stmt = db_get_prepare_stmt($con, $sql, $values);
+    $result = db_get_result_stmt($stmt);
+
+    mysqli_close($con);
+
+    return intval($result[0]['count']) === 1;
 }
 
 /**
@@ -160,7 +184,8 @@ function get_tasks_for_one_project(int $user_id, ?int $project_id, $filter = nul
               id as taskid,
               name,
               deadline as date,
-              (done_at is not null) as done
+              (done_at is not null) as done,
+              file as user_file
               FROM tasks
               WHERE user_id = ?";
 
@@ -239,7 +264,7 @@ function create_task_from_form (int $user_id): array
 
     if (isset($ffile['size'], $ffile['error']) && $ffile['size'] !== 0 && $ffile['error'] === 0) {
             $file_name = $_FILES['preview']['name'];
-            $file_url = '/uploads/' . $file_name;
+            $file_url = '/uploads/' . $user_id . '-'. time() . '-'. $file_name;
             $file_path = ABSPATH . $file_url;
 
             move_uploaded_file($_FILES['preview']['tmp_name'], $file_path);
