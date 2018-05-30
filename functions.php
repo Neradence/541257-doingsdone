@@ -174,10 +174,10 @@ function get_tasks_by_user_id(int $id): array
  *
  * @param int $user_id
  * @param int|null $project_id
- * @param null $filter
+ * @param null|string $filter
  * @return array
  */
-function get_tasks_for_one_project(int $user_id, ?int $project_id, $filter = null): array
+function get_tasks_for_one_project(int $user_id, ?int $project_id, ?string $filter = null): array
 {
     $con = connect_to_db();
 
