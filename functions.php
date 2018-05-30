@@ -174,6 +174,7 @@ function get_tasks_by_user_id(int $id): array
  *
  * @param int $user_id
  * @param int|null $project_id
+ * @param null $filter
  * @return array
  */
 function get_tasks_for_one_project(int $user_id, ?int $project_id, $filter = null): array
@@ -318,7 +319,7 @@ function create_project_from_form (int $user_id): array
 
     $state = $_POST;
 
-    $project_name = $_POST['name'];
+    $project_name = $_POST['name'] ?? null;
 
     if (empty($project_name)) {
         $state['_err'] = true;
@@ -389,9 +390,9 @@ function registration_new_user (): array
 
     $state = $_POST;
 
-    $email = $_POST['email'];
-    $password = $_POST['password'];
-    $name = $_POST['name'];
+    $email = $_POST['email'] ?? null;
+    $password = $_POST['password'] ?? null;
+    $name = $_POST['name'] ?? null;
 
     $required_fields = ['email', 'password', 'name'];
 
